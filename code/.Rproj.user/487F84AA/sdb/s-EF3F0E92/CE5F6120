@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "airquality\n\nm <- melt(airquality, id.vars = c(\"Month\", \"Day\"))\n\ndcast(m, formula = Day + Month ~ variable)\n",
+    "created" : 1457483401495.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "37405745",
+    "id" : "CE5F6120",
+    "lastKnownWriteTime" : 4294967295,
+    "last_content_update" : 1457483896995,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled2"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

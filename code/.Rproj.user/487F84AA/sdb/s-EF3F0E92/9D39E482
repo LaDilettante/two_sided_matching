@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "rm(list = ls())\nsource(\"0_functions.R\")\npacks <- c(\"dplyr\", \"reshape2\", \"stringr\", \"tidyr\",\n           \"lubridate\")\nf_install_and_load(packs)\n\n# ---- Load the clean wide data ----\n\nd <- readRDS(\"../clean_data/JapanFDI_wide.RData\")\n\n# ---- reshape the clean wide format into long format ----\n\n# Time-invariant variables\nc_id_vars <- c(\"order\", \"sub_name\",\n               \"nation\", \"region\", \"province\", \"city\", \"zip_code\", \"ind_zone\",\n               \"sta_pro\", \"mode\", \"fdtn_yr\", \"fdtn_est\", \"yeardata\", \"yearexit\",\n               \"year_e\", \"sic_3_1\", \"sic_3_2\", \"sic_3_3\",\n               \"sic_3_4\", \"sic_3_5\", \"sic_2_1\", \"sic_2_2\", \"sic_2_3\", \"sic_2_4\",\n               \"sic_2_5\", \"sic_brd1\", \"sic_brd2\", \"sic_brd3\", \"sic_brd4\",\n               \"sic_brd5\", \"sic_nrw1\", \"sic_nrw2\", \"sic_nrw3\", \"sic_nrw4\",\n               \"sic_nrw5\")\n\nd_molten <- melt(d, id.vars = c_id_vars)\n\n# Split the variable into variable and year\nd_molten <- separate(d_molten, col = \"variable\", into = c(\"variable2\", \"year\"),\n                     sep = \"(?<=ja1)_|(?<=\\\\w)(?=86|92|94|97|99|01|03)\",\n                     remove = F, extra = \"merge\")\n\n# Check if the split works\nunique(d_molten[, c(\"variable\", \"variable2\", \"year\")])\nd_molten <- d_molten %>% select(-variable)\n\n# Reformat the year 2 digits to 4 digits\nd_molten$year <- parse_date_time(d_molten$year, orders = \"y\")\nd_molten$year <- format(d_molten$year, \"%Y\")\n\n# Cast the data\n\n# Note that year is the last variable on the left hand side,\n# and thus is the variable that varies the fastest\nfm_cast <- as.formula(str_c(str_c(c_id_vars, collapse = \" + \"), \" + year ~ variable2\"))\nd_cast <- dcast(d_molten, formula = fm_cast)\nd_cast <- d_cast %>%\n  select(order, sub_name, year, everything()) %>%\n  arrange(order, year)\n\n# ---- Save the data ----\nsaveRDS(d_cast, file = \"../clean_data/JapanFDI_long.RData\")\n",
+    "created" : 1457481940419.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "370060547",
+    "id" : "9D39E482",
+    "lastKnownWriteTime" : 1457484168,
+    "last_content_update" : 1457484168246,
+    "path" : "~/projects/two_sided_matching/code/12_format_japanfdi_to_long.R",
+    "project_path" : "12_format_japanfdi_to_long.R",
+    "properties" : {
+        "tempName" : "Untitled2"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
