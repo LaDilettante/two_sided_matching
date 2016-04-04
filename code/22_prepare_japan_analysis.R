@@ -17,7 +17,8 @@ c_countries_to_keep <- names(table(d_raw$nation)[table(d_raw$nation) > c_min_num
 d <- d_raw %>%
   select(id, sub_name, year, nation,
          sic_3_1, sic_2_1, jemp, temp, uscptl) %>%
-  mutate(year = as.numeric(year), nation = as.character(nation)) %>%
+  mutate(year = as.numeric(year), nation = as.character(nation),
+         temp = as.numeric(temp), uscptl = as.numeric(uscptl)) %>%
   filter(year == 2001) %>%
   mutate(iso2c = countrycode(nation, origin = "country.name", destination = "iso2c"))
 
