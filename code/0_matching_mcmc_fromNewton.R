@@ -6,9 +6,9 @@ d1 <- date()
 
 #runif(2) ## modify seed for different chain
 # Data
-dat <- read.table("../raw_data/gss18cat.raw", header=T)
+dat <- read.table("../clean_data/gss18cat.raw", header=T)
 choice <- dat$occ17 + 1 # so 1=unemployment
-nworkers <-  length(choice) # Job acceptances (elements in 1:njobs)
+nworkers <-  length(choice) # Number of workers
 
 njobs <- 18    # includes unemployment
 nx <- 4 # number of worker characteristics per worker; including the intercept
@@ -119,8 +119,8 @@ for( i in 1:B )
   new <- sample( 2:njobs, size=nworkers, replace=T ) # don't sample unemp. (1)
   ind <- cbind( 1:nworkers, new )
   # The offers under consideration are:
-  oo <- opp[ind]
-  plusminus <- ifelse(oo,-1,1)
+  oo <- opp[ind] # A: nworkers logical vector, indicating whether newly sampled job is currently offered
+  plusminus <- ifelse(oo,-1,1) # A: convert T/F oo into -1/1
   # Part of MH ratio from P(A|O,alpha)
   denstar <- den+avec[new]*plusminus
   rr1 <- den/denstar
@@ -130,12 +130,12 @@ for( i in 1:B )
 
   # Accept or not (in parallel)
   uu <- runif(nworkers)
-  ok <- (uu <= rr1*rr2 )
+  ok <- (uu <= rr1*rr2 ) # A: ????
   ok[new == choice] <- F  # don't change an offer for an accepted job
   if( any(ok)  )
    {
     oonew <- oo
-    oonew[ok] <- ( !(oo[ok]) )
+    oonew[ok] <- ( !(oo[ok]) ) # Flip offered/unoffered if ok is TRUE
     opp[ind] <- oonew       # Update opportunities
     den[ok] <- denstar[ok]             # Update denominators
    }
@@ -145,12 +145,13 @@ for( i in 1:B )
   if( pskip == mcmc$npar )
    {
     # First alpha:
-    deviation <- mcmc$eps1*runif(nw,min=-1,max=1)
-    alphastar <- alpha + deviation
+    deviation <- mcmc$eps1*runif(nw,min=-1,max=1) # draw a box of +- eps1
+    alphastar <- alpha + deviation # sample alphastar from within that box
     # Calculate likelihood ratio
     avecstar <-  exp( ww%*%alphastar )
     denstar <- opp %*% avecstar
-    logmh <- sum(wa*deviation) + sum(log(den) - log(denstar))
+    logmh <- sum(wa*deviation) + sum(log(den) - log(denstar)) # logmh is the M-H acceptance ratio
+    # A: according to paper this is somehow
     ok <- ifelse( log(runif(1)) <= logmh, T, F )
     ok <- ifelse( is.na(ok), F, ok )
     if(ok)
@@ -162,7 +163,7 @@ for( i in 1:B )
       acrate[2] <- acrate[2]+1
      }
      # Next beta
-     whichones <- ifelse( runif(nx*njobs) <= .25, 1, 0 ) # work on a subset
+     whichones <- ifelse( runif(nx*njobs) <= .25, 1, 0 ) # work on a subset of beta's
      rmat <- matrix( runif(nx*njobs,min=-1,max=1)*whichones, nx, njobs )
      deviation <- bmat*rmat
      betastar <- beta + deviation
@@ -207,5 +208,5 @@ results <- list( mcmc=mcmc,  acrate=acrate,
                  asave=asave,bsave=bsave,logpost=cbind(logpost1,logpost2),
 		 time=c(d1,d2), data="gss18cat.raw" )
 
-save( results, file="RData/test1.RData" )
+save( results, file="../results/test1.RData" )
 #save( results, file="RData/test2.RData" )  ## different seed

@@ -45,5 +45,11 @@ d_cast <- d_cast %>%
   select(order, sub_name, year, everything()) %>%
   arrange(order, year)
 
+# ---- Final cleaning ----
+rm(d_molten) ; gc()
+
+d_cast <- tbl_df(d_cast) %>%
+  select(id = order, everything())
+
 # ---- Save the data ----
 saveRDS(d_cast, file = "../clean_data/JapanFDI_long.RData")

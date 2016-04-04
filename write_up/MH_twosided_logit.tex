@@ -1,0 +1,89 @@
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}  % set the margins to 1in on all sides
+\usepackage{graphicx}              % to include figures
+\usepackage{amsmath}               % great math stuff
+\usepackage{amsfonts}              % for blackboard bold, etc
+\usepackage{amsthm}                % better theorem environments
+
+\usepackage{enumitem}
+\usepackage{rotating} % for sideway table
+\usepackage{caption} % for newline in caption
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+\usepackage{cleveref}
+
+\usepackage{array,tabularx}
+  
+\usepackage{float}
+\restylefloat{table}
+
+% bibliography
+\usepackage{natbib}
+\bibpunct{(}{)}{;}{a}{}{,} % no comma between author and year
+
+\title{Metropolis-Hasting for two-sided logit}
+\author{Anh Le}
+
+
+\begin{document}
+\maketitle
+
+\section{Notation}
+
+Characteristics (observed data):
+\begin{itemize}[noitemsep]
+\item $\underset{(njobs \times nw)}{WW}$ is a matrix of job characteristics, whose $j$th row $\underset{(nw \times 1)}{WW_j}$ is job $j$'s characteristics
+\item $\underset{(nworkers \times nx)}{XX}$ is a matrix of worker characteristics, whose $i$th row $\underset{(nx \times 1)}{XX_i}$ is the characteristics of worker $i$
+\end{itemize}
+
+Preferences (parameters to be estimated):
+\begin{itemize}[noitemsep]
+\item $\underset{(nw \times 1)}{\alpha}$: a vector of workers' preference for jobs' characteristics
+\item $\underset{(nx \times njobs)}{\beta}$: a matrix of employers' preference for workers' characteristics. Each employer has his own set of preference. $\beta_j$--- $\beta$'s $j$th column---is the preference of employer $j$.
+\end{itemize}
+
+Matching structure:
+\begin{itemize}
+\item Worker $i$'s opportunity set is $O_i$, which includes unemployment and other jobs that are offered to worker $i$.
+\end{itemize}
+
+\section{Updating the opportunity set}
+
+We update the opportunity set by sampling $J^*(i)$ as a new job to be considered for worker $i$. The M-H acceptance ratio is $rr1 \times rr2$. To calculate $rr1, rr2$ for worker $i$:
+
+\begin{align}
+den_i &= \sum_{j: j \in O_i} \exp(
+\alpha' WW_j) \qquad \text{line 81, \texttt{den <- opp \%*\% avec}} \\
+denstar_i &= \begin{cases}
+den_i - \exp(\alpha' WW_{J^*(i)}) &\text{if } J^*(i) \text{ is already offered}\\
+den_i + \exp(\alpha' WW_{J^*(i)}) &\text{if } J^*(i) \text{ is not yet offered}
+\end{cases} \\
+& \qquad \text{line 125, \texttt{denstar <- den+avec[new]*plusminus}}
+\end{align}
+
+\begin{align}
+rr1 &= \frac{den_i}{denstar_i} &&\qquad \text{line 126, \texttt{rr1 <- den/denstar}} \\
+rr2 &= \begin{cases}
+-\exp(\beta_{J^*(i)}' XX_1) &\text{if } J^*(i) \text{ is already offered} \\
+\exp(\beta_{J^*(i)}' XX_1) &\text{if } J^*(i) \text{ is not yet offered}
+\end{cases} &&\qquad \text{line 129, \texttt{rr2 <- exp(plusminus*xb)}}
+\end{align}
+
+In sum, the MH acceptance ratio for the proposed new job $J^*(i)$ for worker $i$ is:
+
+\begin{align}
+rr1 \times rr2 &= \frac{den_i}{denstar_i} \times rr2 \\
+&= 
+\frac{\sum\limits_{j: j \in O_i} \exp(
+\alpha' WW_j)}{\sum\limits_{j: j \in O_i} \exp(
+\alpha' WW_j) \pm \exp(\alpha' WW_{J^*(i)})} \times \pm \exp(\beta_{J^*(i)}' XX_1)
+\end{align}
+
+\end{document}

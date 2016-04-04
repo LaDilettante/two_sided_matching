@@ -41,4 +41,4 @@ if (nrow(d) != length(d$order)) {
 # ---- Save wide data ----
 
 saveRDS(d, file = "../clean_data/JapanFDI_wide.RData")
-
+saveRDS(d_labels, file = "../clean_data/JapanFDI_labels.RData")

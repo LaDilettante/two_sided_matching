@@ -27,5 +27,8 @@ raw_data/EnterpriseSurvey_core_2006_2015: raw_data/StandardizedNew-2006_2015--co
 clean_data/JapanFDI_wide.RData: code/11_clean_japanfdi.R raw_data/2003_entry_exit_matrix_all_data.sav
 	cd code;Rscript 11_clean_japanfdi.R
 
+clean_data/JapanFDI_labels.RData: code/11_clean_japanfdi.R raw_data/2003_entry_exit_matrix_all_data.sav
+	cd code;Rscript 11_clean_japanfdi.R
+
 clean_data/JapanFDI_long.RData: code/12_format_japanfdi_to_long.R clean_data/JapanFDI_wide.RData
 	cd code;Rscript 12_format_japanfdi_to_long.R
