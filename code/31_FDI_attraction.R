@@ -2,13 +2,16 @@
 #
 
 # time stamp
+library(dplyr)
 d1 <- date()
 
 #runif(2) ## modify seed for different chain
 # Data
 rm(list = ls())
 dat <- readRDS("../clean_data/JapanFDI_for_analysis.RDdata") %>%
-  select(temp, uscptl, nation_id, gdp, gdppc, democracy)
+  select(temp, uscptl, nation_id, gdp, gdppc, democracy) %>%
+  filter(uscptl > 1000) # Firms with less than 1000 USD capital is 1 pct, likely coding error
+dat2 <- read.table("../clean_data/gss18cat.raw", header=T) # for comparison
 choice <- dat$nation_id
 nfirms <-  length(choice) # Job acceptances (elements in 1:nnations)
 
@@ -56,8 +59,7 @@ beta  <- matrix(0,nx,nnations)   # employer preferences
 
 # Opportunity sets
 opp <- matrix(F,nfirms,nnations)  # The opportunity matrix T=offer,F=no offer
-opp[cbind(1:nfirms,choice)] <- T  # people are offered jobs they have!
-opp[,1] <- T                     # Unemployment always offered
+opp[cbind(1:nfirms,choice)] <- T  # firms are offered the countries they are in!
 
 # Visualize the opp set
 # library(gplots)
@@ -66,10 +68,10 @@ opp[,1] <- T                     # Unemployment always offered
 
 # get 1-sided logit estimates for employer preferences for starting values
 # beta for 1st employer type ("unemployed") remains 0
-for( j in 2:nnations )
+for( j in 1:nnations )
 {
   y <- as.numeric( opp[,j] )
-  mod <- glm( y ~ one + educ + age + nonwhite - 1, family=binomial,
+  mod <- glm( y ~ one + temp + uscptl - 1, family=binomial,
               data=as.data.frame(xx) )
   beta[,j] <- mod$coef
 }
