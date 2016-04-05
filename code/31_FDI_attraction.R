@@ -120,7 +120,7 @@ for( i in 1:B )
   # because of conditional independence)
 
   # Sample a random job for each  worker and consider switching it
-  new <- sample( 2:nnations, size=nfirms, replace=T ) # don't sample unemp. (1)
+  new <- sample( 1:nnations, size=nfirms, replace=T ) # don't sample unemp. (1)
   ind <- cbind( 1:nfirms, new )
   # The offers under consideration are:
   oo <- opp[ind] # A: nfirms logical vector, indicating whether newly sampled job is currently offered
