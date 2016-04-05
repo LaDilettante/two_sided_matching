@@ -1,5 +1,6 @@
 # Modified from R code to run MCMC for the 2-sided marriage model of Logan, Hoff, Newton
 #
+rm(list = ls())
 
 # time stamp
 library(dplyr)
@@ -7,7 +8,6 @@ d1 <- date()
 
 #runif(2) ## modify seed for different chain
 # Data
-rm(list = ls())
 dat <- readRDS("../clean_data/JapanFDI_for_analysis.RDdata") %>%
   select(temp, uscptl, nation_id, gdp, gdppc, democracy) %>%
   filter(uscptl > 1000) # Firms with less than 1000 USD capital is 1 pct, likely coding error
@@ -44,8 +44,8 @@ xx <- as.matrix(xx)
 
 # Run characteristics
 
-mcmc <- list(   nskip=1000,    # block size for each saved state
-                nsave=10000,    # number of saved states
+mcmc <- list(   nskip=100,    # block size for each saved state
+                nsave=100,    # number of saved states
                 npar=2,      # skips between parameter updates
                 eps1=0.02,    # scale of alpha update
                 eps2=1/20  )  #  scale of beta update; reduction of sd
@@ -120,7 +120,7 @@ for( i in 1:B )
   # because of conditional independence)
 
   # Sample a random job for each  worker and consider switching it
-  new <- sample( 2:nnations, size=nfirms, replace=T ) # don't sample unemp. (1)
+  new <- sample( 1:nnations, size=nfirms, replace=T )
   ind <- cbind( 1:nfirms, new )
   # The offers under consideration are:
   oo <- opp[ind] # A: nfirms logical vector, indicating whether newly sampled job is currently offered
@@ -210,7 +210,7 @@ d2 <- date()
 
 results <- list( mcmc=mcmc,  acrate=acrate,
                  asave=asave,bsave=bsave,logpost=cbind(logpost1,logpost2),
-                 time=c(d1,d2), data="gss18cat.raw" )
+                 time=c(d1,d2))
 
-save( results, file="../results/test1.RData" )
+save( results, file="../results/FDI_attraction_wardcluster.RData" )
 #save( results, file="RData/test2.RData" )  ## different seed
