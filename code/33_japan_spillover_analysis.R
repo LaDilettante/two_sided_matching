@@ -1,5 +1,7 @@
 # Modified from R code to run MCMC for the 2-sided marriage model of Logan, Hoff, Newton
 #
+
+# Change: nx, nw, ww[i, j] <-, eps1, eps2, mod (1 sided)
 rm(list = ls())
 
 # time stamp
@@ -72,7 +74,7 @@ opp[cbind(1:nfirms,choice)] <- T  # firms are offered the countries they are in!
 for( j in 1:nnations )
 {
   y <- as.numeric( opp[,j] )
-  mod <- glm( y ~ one + temp + uscptl - 1, family=binomial,
+  mod <- glm( y ~ one + temp + uscptl + intensity_avg - 1, family=binomial,
               data=as.data.frame(xx) )
   beta[,j] <- mod$coef
 }
