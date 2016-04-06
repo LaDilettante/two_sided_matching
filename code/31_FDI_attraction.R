@@ -48,14 +48,14 @@ mcmc <- list(   nskip=100,    # block size for each saved state
                 nsave=10000,    # number of saved states
                 npar=2,      # skips between parameter updates
                 eps1=0.02,    # scale of alpha update
-                eps2=1/20  )  #  scale of beta update; reduction of sd
+                eps2=0.001  )  #  scale of beta update; reduction of sd
 
 # Initialize key objects and common calculations across cycles
 
-alpha <- rep(0,nw)            # worker preferences (one param for each of nw job characteristics)
-beta  <- matrix(0,nx,nnations)   # employer preferences
-# each employer gets their own set of preference (hence nnations),
-# which comprises of one param for each of nx workers characteristics
+alpha <- rep(0,nw)  # firm preferences (one param for each of nw job characteristics)
+beta  <- matrix(0,nx,nnations)   # nations preferences
+# each nation gets their own set of preference (hence nnations),
+# which comprises of one param for each of nx firms characteristics
 
 # Opportunity sets
 opp <- matrix(F,nfirms,nnations)  # The opportunity matrix T=offer,F=no offer
@@ -102,7 +102,7 @@ eta <- xx%*%beta           # worker side linear predictors (big matrix)
 acrate <- rep(0,3)                  # Metropolis acceptance rates
 B <- mcmc$nsave*mcmc$nskip          # number of cycles
 asave <- matrix(NA,mcmc$nsave,nw)   # saved alphas and betas
-bsave <- matrix(NA,mcmc$nsave,nx*(nnations-1) )
+bsave <- matrix(NA,mcmc$nsave,nx*nnations )
 logpost1 <- numeric(mcmc$nsave)      # log P(O|beta)
 logpost2 <- numeric(mcmc$nsave)      # log P(A|O,alpha)
 
@@ -199,7 +199,7 @@ for( i in 1:B )
     logpost1[isave] <- lp1
     logpost2[isave] <- lp2
     asave[isave,] <- c(alpha)
-    bsave[isave,] <- c(beta[,2:nnations]) # vectorize
+    bsave[isave,] <- c(beta[,1:nnations]) # vectorize
     isave <- isave+1
   }
 }
@@ -217,3 +217,4 @@ save(results, file=paste("../result/FDI_attraction",
                           strftime(Sys.time(), format = "%m-%d_%H-%M"),
                           ".RData", sep = ""))
 #save( results, file="RData/test2.RData" )  ## different seed
+

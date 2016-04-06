@@ -16,7 +16,9 @@ f_tslogit <- function(dat = dat,
                       output = paste("../result/tslogit",
                                      strftime(Sys.time(), format = "%m-%d_%H-%M"),
                                      ".RData", sep = ""),
-                      nskip = 1000, nsave = 10000)
+                      nskip = 1000, nsave = 10000,
+                      eps1=0.02, eps2=1/20    # scale of alpha / beta update
+              )
 {
   choice <- dat$nation_id
   nfirms <-  length(choice) # Job acceptances (elements in 1:nnations)
