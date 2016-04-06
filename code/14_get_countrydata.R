@@ -1,6 +1,7 @@
 rm(list = ls())
 source("0_functions.R")
-packs <- c("haven", "dplyr", "WDI", "countrycode", "zoo")
+packs <- c("haven", "reshape2", "plyr", "dplyr", "WDI",
+           "countrycode", "zoo", "stringr")
 f_install_and_load(packs)
 
 # Note: Merge everything using iso2c
@@ -37,6 +38,18 @@ d_wdi <- left_join(d_wdi, d_sing, by = c("country", "year"))
 d_wdi <- d_wdi %>%
   mutate(enroll_sec_pct = ifelse(is.na(enroll_sec_pct), net_enrolment_ratio, enroll_sec_pct)) %>%
   select(-net_enrolment_ratio)
+
+# Supplement with education data
+
+d_avgschooling <- read.csv("../raw_data/mean_year_of_schooling.csv")
+d_avgschooling <- melt(d_avgschooling, id.vars = "Country", variable.name = "year") %>%
+  mutate(year = as.numeric(str_sub(year, start = 2)),
+         iso2c = countrycode(Country, origin = "country.name",
+                             destination = "iso2c")) %>%
+  select(iso2c, year, avg_schooling_years = value)
+
+d_wdi <- left_join(d_wdi, d_avgschooling, by = c("iso2c", "year"))
+
 
 # ---- Get DPI data ----
 
