@@ -44,9 +44,10 @@ d_wdi <- d_wdi %>%
 d_avgschooling <- read.csv("../raw_data/mean_year_of_schooling.csv")
 d_avgschooling <- melt(d_avgschooling, id.vars = "Country", variable.name = "year") %>%
   mutate(year = as.numeric(str_sub(year, start = 2)),
+         avg_schooling_years = as.numeric(value),
          iso2c = countrycode(Country, origin = "country.name",
                              destination = "iso2c")) %>%
-  select(iso2c, year, avg_schooling_years = value)
+  select(iso2c, year, avg_schooling_years)
 
 d_wdi <- left_join(d_wdi, d_avgschooling, by = c("iso2c", "year"))
 

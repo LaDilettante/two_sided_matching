@@ -1,6 +1,8 @@
 raw_data/*
 !raw_data/singapore
 
+code/DPI2015
+
 code/.Rproj.user
 .Rproj.user
 
