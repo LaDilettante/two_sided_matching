@@ -1,6 +1,6 @@
 rm(list = ls())
 source("0_functions.R")
-packs <- c("haven", "dplyr", "WDI", "zoo")
+packs <- c("haven", "dplyr", "WDI", "countrycode", "zoo")
 f_install_and_load(packs)
 
 # Note: Merge everything using iso2c
@@ -26,7 +26,23 @@ d_wdi <- d_wdi_raw %>%
          enroll_tert_pct = SE.TER.ENRR) %>%
   arrange(country, year)
 
+# Supplement with Singapore data
 
+d_sing <- read.csv("../raw_data/singapore/net-enrolment-ratio-primary-and-secondary-education.csv") %>%
+  filter(gender == "both sexes", level_of_education == "secondary education") %>%
+  mutate(country = "Singapore") %>%
+  select(country, year, net_enrolment_ratio)
+
+d_wdi <- left_join(d_wdi, d_sing, by = c("country", "year"))
+d_wdi <- d_wdi %>%
+  mutate(enroll_sec_pct = ifelse(is.na(enroll_sec_pct), net_enrolment_ratio, enroll_sec_pct)) %>%
+  select(-net_enrolment_ratio)
+
+# ---- Get DPI data ----
+
+d_dpi_raw <- psData::DpiGet()
+d_dpi <- d_dpi_raw %>%
+  select(iso2c, countryname, year, system, gov1age, execage)
 
 # ---- Clean dd data ----
 
@@ -40,5 +56,5 @@ d_dd <- d_dd_raw %>%
 
 # ---- Save data ----
 
-save(d_dd, d_wdi, file = "../clean_data/country_covariates.RData")
+save(d_dd, d_wdi, d_dpi, file = "../clean_data/country_covariates.RData")
 
