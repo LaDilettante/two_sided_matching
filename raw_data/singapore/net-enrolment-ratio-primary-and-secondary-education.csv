@@ -1,0 +1,151 @@
+year,level_of_education,gender,net_enrolment_ratio
+1990,primary education,both sexes,96.1
+1990,primary education,boys,96.4
+1990,primary education,girls,95.9
+1990,secondary education,both sexes,80.4
+1990,secondary education,boys,78.3
+1990,secondary education,girls,82.7
+1991,primary education,both sexes,96.1
+1991,primary education,boys,96.6
+1991,primary education,girls,95.6
+1991,secondary education,both sexes,80.5
+1991,secondary education,boys,78.4
+1991,secondary education,girls,82.7
+1992,primary education,both sexes,95.9
+1992,primary education,boys,96.3
+1992,primary education,girls,95.4
+1992,secondary education,both sexes,81.3
+1992,secondary education,boys,79.5
+1992,secondary education,girls,83.1
+1993,primary education,both sexes,95.1
+1993,primary education,boys,95.5
+1993,primary education,girls,94.6
+1993,secondary education,both sexes,79.3
+1993,secondary education,boys,77.2
+1993,secondary education,girls,81.6
+1994,primary education,both sexes,95.3
+1994,primary education,boys,95.8
+1994,primary education,girls,94.8
+1994,secondary education,both sexes,90.3
+1994,secondary education,boys,89.4
+1994,secondary education,girls,91.3
+1995,primary education,both sexes,96.4
+1995,primary education,boys,96.9
+1995,primary education,girls,95.9
+1995,secondary education,both sexes,92.8
+1995,secondary education,boys,92.4
+1995,secondary education,girls,93
+1996,primary education,both sexes,95.7
+1996,primary education,boys,96.3
+1996,primary education,girls,95.1
+1996,secondary education,both sexes,92.6
+1996,secondary education,boys,92.3
+1996,secondary education,girls,92.9
+1997,primary education,both sexes,96
+1997,primary education,boys,96.3
+1997,primary education,girls,95.7
+1997,secondary education,both sexes,92.5
+1997,secondary education,boys,92.6
+1997,secondary education,girls,92.4
+1998,primary education,both sexes,95.5
+1998,primary education,boys,95.8
+1998,primary education,girls,95.1
+1998,secondary education,both sexes,91.9
+1998,secondary education,boys,92.1
+1998,secondary education,girls,91.7
+1999,primary education,both sexes,95.9
+1999,primary education,boys,96.2
+1999,primary education,girls,95.6
+1999,secondary education,both sexes,90.6
+1999,secondary education,boys,90.8
+1999,secondary education,girls,90.4
+2000,primary education,both sexes,95.7
+2000,primary education,boys,96.2
+2000,primary education,girls,95.1
+2000,secondary education,both sexes,91.7
+2000,secondary education,boys,91.8
+2000,secondary education,girls,91.5
+2001,primary education,both sexes,94.3
+2001,primary education,boys,94.5
+2001,primary education,girls,94
+2001,secondary education,both sexes,92.7
+2001,secondary education,boys,92.6
+2001,secondary education,girls,92.8
+2002,primary education,both sexes,94.6
+2002,primary education,boys,94.8
+2002,primary education,girls,94.4
+2002,secondary education,both sexes,91.5
+2002,secondary education,boys,91.6
+2002,secondary education,girls,91.4
+2003,primary education,both sexes,94.9
+2003,primary education,boys,95
+2003,primary education,girls,94.5
+2003,secondary education,both sexes,93.8
+2003,secondary education,boys,93.8
+2003,secondary education,girls,93.8
+2004,primary education,both sexes,94.9
+2004,primary education,boys,95.1
+2004,primary education,girls,94.6
+2004,secondary education,both sexes,93.4
+2004,secondary education,boys,93.5
+2004,secondary education,girls,93.2
+2005,primary education,both sexes,97.3
+2005,primary education,boys,97.5
+2005,primary education,girls,97
+2005,secondary education,both sexes,94.3
+2005,secondary education,boys,94.4
+2005,secondary education,girls,94.2
+2006,primary education,both sexes,96.6
+2006,primary education,boys,96.9
+2006,primary education,girls,96.4
+2006,secondary education,both sexes,94.5
+2006,secondary education,boys,94.5
+2006,secondary education,girls,94.4
+2007,primary education,both sexes,97.1
+2007,primary education,boys,97.6
+2007,primary education,girls,96.6
+2007,secondary education,both sexes,95.1
+2007,secondary education,boys,95.1
+2007,secondary education,girls,95
+2008,primary education,both sexes,97.1
+2008,primary education,boys,97.2
+2008,primary education,girls,96.6
+2008,secondary education,both sexes,95
+2008,secondary education,boys,95.1
+2008,secondary education,girls,94.9
+2009,primary education,both sexes,96.8
+2009,primary education,boys,97.2
+2009,primary education,girls,96.4
+2009,secondary education,both sexes,95.2
+2009,secondary education,boys,95.6
+2009,secondary education,girls,94.8
+2010,primary education,both sexes,100
+2010,primary education,boys,100
+2010,primary education,girls,100
+2010,secondary education,both sexes,98.3
+2010,secondary education,boys,98.5
+2010,secondary education,girls,98.1
+2011,primary education,both sexes,100
+2011,primary education,boys,100
+2011,primary education,girls,100
+2011,secondary education,both sexes,98.8
+2011,secondary education,boys,99
+2011,secondary education,girls,98.5
+2012,primary education,both sexes,100
+2012,primary education,boys,100
+2012,primary education,girls,100
+2012,secondary education,both sexes,98.8
+2012,secondary education,boys,98.9
+2012,secondary education,girls,98.8
+2013,primary education,both sexes,100
+2013,primary education,boys,100
+2013,primary education,girls,100
+2013,secondary education,both sexes,99.3
+2013,secondary education,boys,99.5
+2013,secondary education,girls,99.2
+2014,primary education,both sexes,100
+2014,primary education,boys,100
+2014,primary education,girls,100
+2014,secondary education,both sexes,99.5
+2014,secondary education,boys,99.5
+2014,secondary education,girls,99.6
