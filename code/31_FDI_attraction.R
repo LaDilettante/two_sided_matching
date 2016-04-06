@@ -17,7 +17,7 @@ nfirms <-  length(choice) # Job acceptances (elements in 1:nnations)
 
 nnations <- length(unique(choice))    # includes unemployment
 nx <- 3 # number of firm characteristics per firm; including the intercept
-nw <- 3  # number of job characteristics per job; in this example, job quality
+nw <- 3  # number of country characteristics per country
 
 ww <- matrix(NA,nnations,nw) # ww is a matrix of job characteristics (see below)
 for( i in 1:nnations )

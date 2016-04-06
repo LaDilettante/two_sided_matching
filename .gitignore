@@ -2,3 +2,19 @@ raw_data/*
 
 code/.Rproj.user
 .Rproj.user
+
+## Core latex/pdflatex auxiliary files:
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+
+## Bibliography auxiliary files (bibtex/biblatex/biber):
+*.bbl
+*.bcf
+*.blg
+
+*.synctex.gz

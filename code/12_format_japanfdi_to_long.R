@@ -18,7 +18,7 @@ c_id_vars <- c("order", "sub_name",
                "sic_3_4", "sic_3_5", "sic_2_1", "sic_2_2", "sic_2_3", "sic_2_4",
                "sic_2_5", "sic_brd1", "sic_brd2", "sic_brd3", "sic_brd4",
                "sic_brd5", "sic_nrw1", "sic_nrw2", "sic_nrw3", "sic_nrw4",
-               "sic_nrw5")
+               "sic_nrw5", "SIC3_label", "intensity_avg")
 
 d_molten <- melt(d, id.vars = c_id_vars)
 
