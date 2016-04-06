@@ -45,12 +45,15 @@ d_wdi[d_wdi$iso2c == "VN" & d_wdi$year == 201, "enroll_sec_pct"] = 89.94
 d_merged <- d %>%
   left_join(d_wdi, by = c("iso2c", "year")) %>%
   left_join(d_dd, by = c("iso2c", "year")) %>%
-  select(temp, uscptl, intensity_avg, nation, gdp, gdppc, enroll_sec_pct, democracy)
+  select(temp, uscptl, intensity_avg, nation,
+         gdp, gdppc, enroll_sec_pct, labor_sec_pct, democracy)
 
-md.pattern(d_merged %>% select(democracy, gdp, gdppc, enroll_sec_pct))
+md.pattern(d_merged %>% select(democracy, gdp, gdppc, enroll_sec_pct, labor_sec_pct))
 md.pattern(d_merged %>% select(uscptl, temp, intensity_avg))
 
-d_merged_final <- na.omit(d_merged)
+d_merged_final <- d_merged %>%
+  select(temp, uscptl, intensity_avg, nation,
+         gdp, gdppc, labor_sec_pct, democracy) %>% na.omit()
 
 # Add nation_id for nation
 
