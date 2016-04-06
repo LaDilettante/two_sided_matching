@@ -1,4 +1,4 @@
-load("../result/FDI_attraction04-05_18-02.RData")
+# load("../result/FDI_attraction04-05_18-02.RData")
 
 str(results, max.level = 2)
 
@@ -7,7 +7,7 @@ str(results, max.level = 2)
 # Convergence
 par(mfrow = c(2, 2))
 for (i in 1:3) {
-  plot(results$asave[, 1], type = "l")
+  plot(results$asave[, i], type = "l")
 }
 par(mfrow = c(1, 1))
 
@@ -19,7 +19,7 @@ hist(results$asave[, 3])
 par(mfrow = c(1, 1))
 
 for (i in 1:3) {
-  quantile(results$asave[, i], probs = c(0.025, 0.075))
+  print(quantile(results$asave[, i], probs = c(0.025, 0.075)))
 }
 
 

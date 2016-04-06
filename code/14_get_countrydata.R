@@ -14,7 +14,7 @@ c_endyear = 2010
 d_wdi_raw <- WDI(
   country = "all",
   indicator = c("NY.GDP.MKTP.KD", "NY.GDP.PCAP.KD", "SL.TLF.TERT.ZS",
-                "SE.SEC.ENRR", "SE.TER.ENRR"),
+                "SE.SEC.NENR", "SL.TLF.SECO.ZS"),
   start = c_startyear, end = c_endyear, extra = TRUE)
 
 d_wdi <- d_wdi_raw %>%
@@ -22,8 +22,8 @@ d_wdi <- d_wdi_raw %>%
   select(iso2c, country, year,
          gdp = NY.GDP.MKTP.KD,
          gdppc = NY.GDP.PCAP.KD,
-         enroll_sec_pct = SE.SEC.ENRR,
-         enroll_tert_pct = SE.TER.ENRR) %>%
+         enroll_sec_pct = SE.SEC.NENR,
+         labor_sec_pct = SL.TLF.SECO.ZS) %>%
   arrange(country, year)
 
 # Supplement with Singapore data
