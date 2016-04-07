@@ -5,6 +5,7 @@
 \usepackage{amsmath}               % great math stuff
 \usepackage{amsfonts}              % for blackboard bold, etc
 \usepackage{amsthm}                % better theorem environments
+\usepackage{bm} % \bm for bold math
 
 \usepackage{enumitem}
 \usepackage{rotating} % for sideway table
@@ -85,5 +86,29 @@ rr1 \times rr2 &= \frac{den_i}{denstar_i} \times rr2 \\
 \alpha' WW_j)}{\sum\limits_{j: j \in O_i} \exp(
 \alpha' WW_j) \pm \exp(\alpha' WW_{J^*(i)})} \times \pm \exp(\beta_{J^*(i)}' XX_1)
 \end{align}
+
+\section{Preliminaries}
+
+\begin{align}
+p(A_i | O_i, \alpha_i) = \frac{\exp(\alpha'W_{C(i)})}{\sum\limits_{j:j \in O_i} \exp(\alpha'W_j)}
+\end{align}
+\section{Update opportunity set}
+
+Target distribution for a firm $i$ 
+
+\begin{align}
+p(O_i | A_i, \alpha_i, \bm{\beta}) &= \frac{p(O_i, A_i, \alpha, \bm{\beta})}{p(A_i, \alpha_i, \bm{\beta})}
+\end{align}
+
+Metropolis-Hasting acceptance ratio:
+
+\begin{align}
+\frac{p(O_i^* | A_i, \alpha_i, \bm{\beta})}{p(O_i | A_i, \alpha_i, \bm{\beta})} &= \frac{p(O_i^*, A_i, \alpha, \bm{\beta})}{p(A_i, \alpha_i, \bm{\beta})} \times \frac{p(A_i, \alpha_i, \bm{\beta})}{p(O_i, A_i, \alpha_i, \bm{\beta})} \\
+&= \frac{p(O_i^*, A_i, \alpha_i, \bm{\beta})}{p(O_i, A_i, \alpha_i, \bm{\beta})} \\
+&= \frac{p(A_i | O_i^*, \alpha_i)p(O_i^*|\bm{\beta})}{p(A_i | O_i, \alpha_i)p(O_i|\bm{\beta})} \label{eq:updateO_joint_dist_into_conditional_dist} \\
+&= 
+\end{align}
+
+where \Cref{eq:updateO_joint_dist_into_conditional_dist} is due to the fact that the acceptance of firm $i$ only depends on what is offered to it and what is its preference, $p(A_i | O_i^*, \alpha_i)$; what is offered to $i$ depends on the preferences of all countries, $p(O_i^* \ \bm{\beta})$.
 
 \end{document}
