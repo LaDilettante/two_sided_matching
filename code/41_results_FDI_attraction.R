@@ -1,6 +1,10 @@
 # load("../result/FDI_attraction04-05_18-02.RData")
 
-load("../result/FDI_spillover04-06_19-16.RData")
+load("../result/FDI_spillover04-07_03-27.RData")
+
+head(results$dat)
+results$acrate
+results$mcmc
 
 str(results, max.level = 2)
 
@@ -11,33 +15,31 @@ nx <- dim(results$bsave)[2] / length(unique(results$dat$nation_id))
 # Convergence
 par(mfrow = c(2, 2))
 for (i in 1:nw) {
-  plot(results$asave[, i], type = "l")
+  plot(results$asave[, i], type = "l", ylab = paste(c("alpha", i)))
 }
 par(mfrow = c(1, 1))
 
 # Results alpha
 c_burnin <- 6000
+for (i in 1:nw) {
+  print(quantile(results$asave[c_burnin:nrow(results$asave), i],
+                 probs = c(0.025, 0.5, 0.975)))
+}
+head(results$dat)
+
 par(mfrow = c(2, 2))
 for (i in 1:nw) {
   hist(results$asave[c_burnin:nrow(results$asave), i])
 }
 par(mfrow = c(1, 1))
 
-for (i in 1:nw) {
-  print(quantile(results$asave[c_burnin:nrow(results$asave), i],
-                 probs = c(0.025, 0.5, 0.075)))
-}
-head(results$dat)
-
-
 # ---- beta ----
-nx <- 3
 
 for (i in 1:((dim(results$bsave)[2])/nx)) {
   par(mfrow = c(2, 2))
-  plot(results$bsave[, (i - 1) + 1], type = "l")
-  plot(results$bsave[, (i - 1) + 2], type = "l")
-  plot(results$bsave[, (i - 1) + 3], type = "l")
+  for (j in 1:nx) {
+    plot(results$bsave[, (i - 1) + j], type = "l", ylab = paste(c("beta", i, j)))
+  }
   par(mfrow = c(1, 1))
 }
 

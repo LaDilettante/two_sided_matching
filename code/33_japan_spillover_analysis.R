@@ -31,7 +31,9 @@ for( i in 1:nnations )
   ww[i,4] <- unique( dat$avg_schooling_years[ind] ) # enroll_sec_pct of nation i
 }
 # rescale (for better numerics )
-ww[, 1:2] <- log(ww[, 1:2]) # log(gdp), log(gdppc)
+ww[, 1:2] <- log(ww[, 1:2]) / 10 # log(gdp) / 10, log(gdppc) / 10
+ww[, 4] <- ww[, 4] / 10 # avg_schooling_years / 10
+colnames(ww) <- c("lgdp_div10", "lgdppc_div10", "dem", "avg_schooling_years_div10")
 
 one <- rep(1,nfirms)
 xx <- cbind( one, dat[,1:(nx-1)] )
@@ -39,10 +41,10 @@ xx <- cbind( one, dat[,1:(nx-1)] )
 # including column of ones for an intercept
 
 # rescale
-xx[,2] <- log(xx[,2]+1) # log(temp)
-xx[,3] <- log(xx[,3]) # log(uscptl)
+xx[,2] <- log(xx[,2]+1) / 10 # log(temp) / 10
+xx[,3] <- log(xx[,3]) / 10 # log(uscptl) / 10
 xx <- as.matrix(xx)
-
+names(xx) <- c("one", "ltemp_div10", "luscpltl_div10", "intensity_avg")
 
 
 # Run characteristics
@@ -214,9 +216,9 @@ d2 <- date()
 
 results <- list( mcmc=mcmc,  acrate=acrate,
                  asave=asave,bsave=bsave,logpost=cbind(logpost1,logpost2),
-                 time=c(d1,d2), dat = dat)
+                 time=c(d1,d2), dat = dat, ww = ww, xx = xx)
 
-save(results, file=paste("../result/FDI_spillover",
+save(results, file=paste("../result/FDI_spillover_rescaled",
                          strftime(Sys.time(), format = "%m-%d_%H-%M"),
                          ".RData", sep = ""))
 #save( results, file="RData/test2.RData" )  ## different seed
