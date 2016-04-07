@@ -31,7 +31,7 @@ for( i in 1:nnations )
   ww[i,4] <- unique( dat$avg_schooling_years[ind] ) # enroll_sec_pct of nation i
 }
 # rescale (for better numerics )
-ww[, 1:2] <- log(ww[, 1:2])
+ww[, 1:2] <- log(ww[, 1:2]) # log(gdp), log(gdppc)
 
 one <- rep(1,nfirms)
 xx <- cbind( one, dat[,1:(nx-1)] )
@@ -39,8 +39,8 @@ xx <- cbind( one, dat[,1:(nx-1)] )
 # including column of ones for an intercept
 
 # rescale
-xx[,2] <- log(xx[,2]+1) # temp
-xx[,3] <- log(xx[,3]) # uscptl
+xx[,2] <- log(xx[,2]+1) # log(temp)
+xx[,3] <- log(xx[,3]) # log(uscptl)
 xx <- as.matrix(xx)
 
 
