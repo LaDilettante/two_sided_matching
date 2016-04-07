@@ -50,8 +50,8 @@ xx <- as.matrix(xx)
 mcmc <- list(   nskip=100,    # block size for each saved state
                 nsave=10000,    # number of saved states
                 npar=2,      # skips between parameter updates
-                eps1=0.02,    # scale of alpha update
-                eps2=0.001  )  #  scale of beta update; reduction of sd
+                eps1=0.08,    # scale of alpha update
+                eps2=0.004  )  #  scale of beta update; reduction of sd
 
 # Initialize key objects and common calculations across cycles
 
