@@ -55,60 +55,92 @@ Matching structure:
 \item Worker $i$'s opportunity set is $O_i$, which includes unemployment and other jobs that are offered to worker $i$.
 \end{itemize}
 
-\section{Updating the opportunity set}
-
-We update the opportunity set by sampling $J^*(i)$ as a new job to be considered for worker $i$. The M-H acceptance ratio is $rr1 \times rr2$, with $rr1$ coming from $P(A|O, \alpha)$ and $rr2$ coming from $P(O|\beta)$. To calculate $rr1, rr2$ for worker $i$:
-
-\begin{align}
-den_i &= \sum_{j: j \in O_i} \exp(
-\alpha' WW_j) \qquad \text{line 81, \texttt{den <- opp \%*\% avec}} \\
-denstar_i &= \begin{cases}
-den_i - \exp(\alpha' WW_{J^*(i)}) &\text{if } J^*(i) \text{ is already offered}\\
-den_i + \exp(\alpha' WW_{J^*(i)}) &\text{if } J^*(i) \text{ is not yet offered}
-\end{cases} \\
-& \qquad \text{line 125, \texttt{denstar <- den+avec[new]*plusminus}}
-\end{align}
-
-\begin{align}
-rr1 &= \frac{den_i}{denstar_i} &&\qquad \text{line 126, \texttt{rr1 <- den/denstar}} \\
-rr2 &= \begin{cases}
--\exp(\beta_{J^*(i)}' XX_1) &\text{if } J^*(i) \text{ is already offered} \\
-\exp(\beta_{J^*(i)}' XX_1) &\text{if } J^*(i) \text{ is not yet offered}
-\end{cases} &&\qquad \text{line 129, \texttt{rr2 <- exp(plusminus*xb)}}
-\end{align}
-
-In sum, the MH acceptance ratio for the proposed new job $J^*(i)$ for worker $i$ is:
-
-\begin{align}
-rr1 \times rr2 &= \frac{den_i}{denstar_i} \times rr2 \\
-&= 
-\frac{\sum\limits_{j: j \in O_i} \exp(
-\alpha' WW_j)}{\sum\limits_{j: j \in O_i} \exp(
-\alpha' WW_j) \pm \exp(\alpha' WW_{J^*(i)})} \times \pm \exp(\beta_{J^*(i)}' XX_1)
-\end{align}
-
 \section{Preliminaries}
 
+Similar to multinomial logit (the firm is choosing between countries, similar to multinomial logit)
+
 \begin{align}
-p(A_i | O_i, \alpha_i) = \frac{\exp(\alpha'W_{C(i)})}{\sum\limits_{j:j \in O_i} \exp(\alpha'W_j)}
+p(A_i | O_i, \alpha_i) = \frac{\exp(\alpha'W_{a_i})}{\sum\limits_{j:j \in O_i} \exp(\alpha'W_j)} \label{eq:conditional_probability_of_accept}
+\end{align}
+
+The country is deciding whether to make the offer to the firm or not, a logistic decision
+
+\begin{align}
+p(O_i | \bm{\beta}) &= \prod_{j \in O_i} p(o_{ij} = 1 | \bm{\beta}) \prod_{j \notin O_i} p(o_{ij} = 0 | \bm{\beta}) \\
+&= \prod_{j \in O_i} \frac{\exp{\bm{\beta_j} ' X_i}}{1 + \exp(\bm{\beta_j}' X_i)}
+ \prod_{j \notin O_i} \frac{\exp{\bm{\beta_j} ' X_i}}{1 + \exp(\bm{\beta_j}' X_i)} \label{eq:conditional_probability_of_offer}
 \end{align}
 \section{Update opportunity set}
 
 Target distribution for a firm $i$ 
 
 \begin{align}
-p(O_i | A_i, \alpha_i, \bm{\beta}) &= \frac{p(O_i, A_i, \alpha, \bm{\beta})}{p(A_i, \alpha_i, \bm{\beta})}
+p(O_i | A_i, \alpha, \bm{\beta}) &= \frac{p(O_i, A_i, \alpha, \bm{\beta})}{p(A_i, \alpha, \bm{\beta})}
 \end{align}
+
+We propose a new $O_i^*$ by randomly sample a new offer, $j^*$ for each firm. If the new offer is not already in the current opportunity set, we add the offer to the set. If it already is in the opportunity set, we remove it from the set.
+
+We then calculate the Metropolis-Hasting acceptance ratio:
+
+\begin{align}
+MH_O = \frac{p(O_i^* | A_i, \alpha, \bm{\beta})}{p(O_i | A_i, \alpha, \bm{\beta})} &= \frac{p(O_i^*, A_i, \alpha, \bm{\beta})}{p(A_i, \alpha, \bm{\beta})} \times \frac{p(A_i, \alpha, \bm{\beta})}{p(O_i, A_i, \alpha, \bm{\beta})} \\
+&= \frac{p(O_i^*, A_i, \alpha, \bm{\beta})}{p(O_i, A_i, \alpha, \bm{\beta})} \\
+&= \frac{p(A_i | O_i^*, \alpha)p(O_i^*|\bm{\beta})}{p(A_i | O_i, \alpha)p(O_i|\bm{\beta})} \label{eq:updateO_joint_dist_into_conditional_dist} \\
+\end{align}
+
+where the factorization of the likelihood in \Cref{eq:updateO_joint_dist_into_conditional_dist} is due to the fact that the acceptance of firm $i$ only depends on what is offered to it and what is its preference, $p(A_i | O_i^*, \alpha)$; what is offered to $i$ depends on the preferences of all countries, $p(O_i^* \ \bm{\beta})$.
+
+If we plug in \Cref{eq:conditional_probability_of_accept} and \Cref{eq:conditional_probability_of_offer}
+
+\begin{align}
+\frac{p(O_i^* | A_i, \alpha, \bm{\beta})}{p(O_i | A_i, \alpha, \bm{\beta})} &= \frac{\sum\limits_{j:j \in O_i} \exp(\alpha'W_j)}{\sum\limits_{j:j \in O_i} \exp(\alpha'W_j) + \exp(\alpha' W_{j^*})} \times \exp(\bm{\beta}_{j^*}'X_i)
+\end{align}
+
+where $j^*$ is the index of the newly sampled job. This is the case when the newly proposed job is not already offered, so it's added to the opportunity set.
+
+When the newly proposed job is already offered, so it's removed from the opportunity set, we have
+
+\begin{align}
+\frac{p(O_i^* | A_i, \alpha, \bm{\beta})}{p(O_i | A_i, \alpha, \bm{\beta})} &= \frac{\sum\limits_{j:j \in O_i} \exp(\alpha'W_j)}{\sum\limits_{j:j \in O_i} \exp(\alpha'W_j) - \exp(\alpha' W_{j^*})} \times -\exp(\bm{\beta}_{j^*}'X_i)
+\end{align}
+
+\section{Update firms' parameters, $\alpha$}
+
+Target distribution:
+
+\begin{align}
+p(\alpha | A, O, \bm{\beta}) &= \frac{p(O, A, \alpha, \bm{\beta})}{p(A, O, \bm{\beta})}
+\end{align}
+
+We propose a new $\alpha^*$ using a symmetric proposal distribution that sample $\alpha^*$ in a box whose boundary is $\alpha^* \pm \epsilon_\alpha$
 
 Metropolis-Hasting acceptance ratio:
 
 \begin{align}
-\frac{p(O_i^* | A_i, \alpha_i, \bm{\beta})}{p(O_i | A_i, \alpha_i, \bm{\beta})} &= \frac{p(O_i^*, A_i, \alpha, \bm{\beta})}{p(A_i, \alpha_i, \bm{\beta})} \times \frac{p(A_i, \alpha_i, \bm{\beta})}{p(O_i, A_i, \alpha_i, \bm{\beta})} \\
-&= \frac{p(O_i^*, A_i, \alpha_i, \bm{\beta})}{p(O_i, A_i, \alpha_i, \bm{\beta})} \\
-&= \frac{p(A_i | O_i^*, \alpha_i)p(O_i^*|\bm{\beta})}{p(A_i | O_i, \alpha_i)p(O_i|\bm{\beta})} \label{eq:updateO_joint_dist_into_conditional_dist} \\
-&= 
+MH_\alpha = \frac{p(\alpha^* | A, O, \bm{\beta})}{p(\alpha | A, O, \bm{\beta})} &= \frac{p(A_i | O_i, \alpha^*)p(O_i|\bm{\beta})}{p(A_i | O_i, \alpha)p(O_i|\bm{\beta})} \\
+&= \frac{p(A_i | O_i, \alpha^*)}{p(A_i | O_i, \alpha)} \label{eq:updatealpha_MHratio_final}
 \end{align}
 
-where \Cref{eq:updateO_joint_dist_into_conditional_dist} is due to the fact that the acceptance of firm $i$ only depends on what is offered to it and what is its preference, $p(A_i | O_i^*, \alpha_i)$; what is offered to $i$ depends on the preferences of all countries, $p(O_i^* \ \bm{\beta})$.
+where \Cref{eq:updatealpha_MHratio_final} is due to the flat prior (so $\frac{p(\alpha^*)}{p(\alpha)}=1$) and the symmetric proposal distribution (so $\frac{p(\alpha^*|\alpha)}{p(\alpha|\alpha^*)} = 1$)
+
+If we plug in \Cref{eq:conditional_probability_of_accept},
+
+\begin{align}
+MH_\alpha &= \prod_i \left[ \frac{\exp(\alpha^{*\prime} W_{a_i})}{\exp(\alpha' W_{a_i})} \times \frac{\sum\limits_{j:j \in O_i} \exp(\alpha' W_j)}{\sum\limits_{j:j \in O_i} \exp(\alpha^{*\prime}W_j)} \right] \\
+&= \prod_i \left[ \exp(\epsilon_\alpha ' W_{a_i}) \times \frac{\sum\limits_{j:j \in O_i} \exp(\alpha' W_j)}{\sum\limits_{j:j \in O_i} \exp(\alpha^{*\prime}W_j)} \right] \\
+\log MH_\alpha &= \sum_i \left[ \epsilon_\alpha' W_{a_i} + \log\left(\sum\limits_{j:j \in O_i} \exp(\alpha' W_j)\right) - \log\left(\sum\limits_{j:j \in O_i} \exp(\alpha^{*\prime} W_j)\right) \right]
+\end{align}
+
+\section{Update countries' parameters, \texorpdfstring{$\boldmath\beta$}{}}
+
+Target distribution:
+
+\begin{align}
+p(\bm{\beta}|A, O, \alpha) &= \frac{p(O, A, \alpha, \bm{\beta})}{p(A, O, \alpha)}
+\end{align}
+
+We propose a new $\bm{\beta}^*$ using a symmetric proposal distribution that sample $\bm{\beta}^*$ in a box with side length $\epsilon_\beta$
+
+
 
 \end{document}
