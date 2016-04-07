@@ -50,8 +50,8 @@ xx <- as.matrix(xx)
 mcmc <- list(   nskip=100,    # block size for each saved state
                 nsave=10000,    # number of saved states
                 npar=2,      # skips between parameter updates
-                eps1=0.02,    # scale of alpha update
-                eps2=0.001  )  #  scale of beta update; reduction of sd
+                eps1=0.04,    # scale of alpha update
+                eps2=0.002  )  #  scale of beta update; reduction of sd
 
 # Initialize key objects and common calculations across cycles
 
@@ -216,7 +216,7 @@ results <- list( mcmc=mcmc,  acrate=acrate,
                  asave=asave,bsave=bsave,logpost=cbind(logpost1,logpost2),
                  time=c(d1,d2), dat = dat)
 
-save(results, file=paste("../result/FDI_attraction",
+save(results, file=paste("../result/FDI_spillover",
                          strftime(Sys.time(), format = "%m-%d_%H-%M"),
                          ".RData", sep = ""))
 #save( results, file="RData/test2.RData" )  ## different seed
