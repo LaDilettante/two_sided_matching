@@ -181,7 +181,7 @@ f_tslogit <- function(dat = dat,
       lp1 <- sum( opp[,2:nnations]*eta[,2:nnations] ) -
         sum( log(1+exp(eta[,2:nnations])) )   # P(O|beta)
       lp2 <-  sum(wa*alpha) - sum( log(den) )       # P(A|O,alpha)
-      print( c(isave) )
+      # print( c(isave) )
       logpost1[isave] <- lp1
       logpost2[isave] <- lp2
       asave[isave,] <- c(alpha)
@@ -203,5 +203,5 @@ f_tslogit <- function(dat = dat,
                  strftime(Sys.time(), format = "%m-%d_%H-%M"),
                  ".RData", sep = "")
   save(results, file=output)
-  cat(output, done)
+  cat(output, done, d1, d2)
 }
