@@ -1,6 +1,5 @@
 # load("../result/FDI_attraction04-05_18-02.RData")
-
-load("../result/FDI_spillover04-07_03-27.RData")
+# load("../result/FDI_spillover04-07_03-27.RData")
 
 head(results$dat)
 results$acrate
