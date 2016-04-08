@@ -203,4 +203,5 @@ f_tslogit <- function(dat = dat,
                  strftime(Sys.time(), format = "%m-%d_%H-%M"),
                  ".RData", sep = "")
   save(results, file=output)
+  cat(output, done)
 }

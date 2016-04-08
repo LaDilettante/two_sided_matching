@@ -32,7 +32,7 @@ registerDoMC(cores=detectCores()/2)
 writeLines(c(""), "tslogit_parallel.log") # Clear out log file
 foreach(eps1 = eps_grid$eps1, eps2 = eps_grid$eps2) %dopar% {
   sink("log.txt", append=TRUE) # Write to log file
-  f_tslogit(dat = dat, nskip = 3, nsave = 5,
+  f_tslogit(dat = dat, nskip = 200, nsave = 20000,
             eps1=eps1, eps2=eps2,
             firm_vars = firm_vars, country_vars = country_vars)
 }
