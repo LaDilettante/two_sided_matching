@@ -2,6 +2,7 @@ rm(list = ls())
 source("0_tslogit.R")
 library(foreach)
 library(doMC)
+library(dplyr)
 # ---- Load data ----
 
 dat <- readRDS("../clean_data/JapanFDI_for_analysis_withrdintense_humancap.RDdata") %>%
