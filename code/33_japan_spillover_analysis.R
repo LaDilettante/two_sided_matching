@@ -50,7 +50,7 @@ names(xx) <- c("one", "ltemp_div10", "luscpltl_div10", "intensity_avg")
 # Run characteristics
 
 mcmc <- list(   nskip=100,    # block size for each saved state
-                nsave=10000,    # number of saved states
+                nsave=50000,    # number of saved states
                 npar=2,      # skips between parameter updates
                 eps1=0.04,    # scale of alpha update
                 eps2=0.002  )  #  scale of beta update; reduction of sd
