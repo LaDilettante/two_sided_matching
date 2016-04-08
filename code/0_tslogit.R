@@ -1,51 +1,43 @@
 # Modified from R code to run MCMC for the 2-sided marriage model of Logan, Hoff, Newton
-#
-
-# time stamp
-library(dplyr)
-d1 <- date()
-
-#runif(2) ## modify seed for different chain
-# Data
-rm(list = ls())
-dat <- readRDS("../clean_data/JapanFDI_for_analysis.RDdata") %>%
-  select(temp, uscptl, nation_id, gdp, gdppc, democracy) %>%
-  filter(uscptl > 1000) # Firms with less than 1000 USD capital is 1 pct, likely coding error
+# Encapsulated into a function
 
 f_tslogit <- function(dat = dat,
-                      output = paste("../result/tslogit",
-                                     strftime(Sys.time(), format = "%m-%d_%H-%M"),
-                                     ".RData", sep = ""),
                       nskip = 1000, nsave = 10000,
-                      eps1=0.02, eps2=1/20    # scale of alpha / beta update
+                      eps1=0.02, eps2=1/20,    # scale of alpha / beta update
+                      firm_vars = c("temp", "uscptl", "intensity_avg"),
+                      country_vars = c("gdp", "gdppc", "democracy", "avg_schooling_years")
               )
 {
+  library(dplyr)
+  d1 <- date() # time-stamp
+
+  class(dat) <- "data.frame" # Remove the dplyr class
+
   choice <- dat$nation_id
   nfirms <-  length(choice) # Job acceptances (elements in 1:nnations)
 
   nnations <- length(unique(choice))    # includes unemployment
-  nx <- 3 # number of firm characteristics per firm; including the intercept
-  nw <- 3  # number of job characteristics per job; in this example, job quality
+  # nx <- 3 # number of firm characteristics per firm; including the intercept
+  nx <- length(firm_vars) + 1
+  # nw <- 3  # number of country characteristics per country;
+  nw <- length(country_vars)
 
-  ww <- matrix(NA,nnations,nw) # ww is a matrix of job characteristics (see below)
-  for( i in 1:nnations )
-  {
-    ind <- (1:nfirms)[ dat$nation_id == i ] # index of workers whose got job i
-    ww[i,1] <- unique( dat$gdp[ind] ) # gdp of nation i
-    ww[i,2] <- unique( dat$gdppc[ind] ) # gdppc of nation i
-    ww[i,3] <- unique( dat$democracy[ind] ) # democracy of nation i
-  }
-  # rescale (for better numerics )
-  ww[, 1:2] <- log(ww[, 1:2])
+  # ww is a matrix of country characteristics
+  ww <- dat %>% select(nation_id, match(country_vars, names(dat))) %>%
+    distinct() %>%
+    arrange(nation_id) %>% select(-nation_id) %>% as.matrix
+
+  # rescale (for better numerics)
+  ww[, c("gdp", "gdppc")] <- log(ww[, c("gdp", "gdppc")])
 
   one <- rep(1,nfirms)
-  xx <- cbind( one, dat[,1:(nx-1)] )
+  xx <- cbind( one, dat[, firm_vars] )
   # matrix nfirms x nx of firm characteristics
   # including column of ones for an intercept
 
   # rescale
-  xx[,2] <- xx[,2] / 10
-  xx[,3] <- log(xx[,3])
+  xx[, "temp"] <- xx[, "temp"] / 10
+  xx[, "uscptl"] <- log(xx[, "uscptl"])
   xx <- as.matrix(xx)
 
   # Run characteristics
@@ -53,8 +45,8 @@ f_tslogit <- function(dat = dat,
   mcmc <- list(   nskip=nskip,    # block size for each saved state
                   nsave=nsave,    # number of saved states
                   npar=2,      # skips between parameter updates
-                  eps1=0.02,    # scale of alpha update
-                  eps2=1/20  )  #  scale of beta update; reduction of sd
+                  eps1=eps1,    # scale of alpha update
+                  eps2=eps2  )  #  scale of beta update; reduction of sd
 
   # Initialize key objects and common calculations across cycles
 
@@ -67,30 +59,19 @@ f_tslogit <- function(dat = dat,
   opp <- matrix(F,nfirms,nnations)  # The opportunity matrix T=offer,F=no offer
   opp[cbind(1:nfirms,choice)] <- T  # firms are offered the countries they are in!
 
-  # Visualize the opp set
-  # library(gplots)
-  # heatmap.2(head(opp + 0, n = 50), dendrogram = "none", trace = "none",
-  #   density.info = "none", Rowv = F, Colv = F)
-
-  # get 1-sided logit estimates for employer preferences for starting values
-  # beta for 1st employer type ("unemployed") remains 0
+  # get 1-sided logit estimates for country preferences for starting values
   for( j in 1:nnations )
   {
     y <- as.numeric( opp[,j] )
-    mod <- glm( y ~ one + temp + uscptl - 1, family=binomial,
+    mod_formula <- paste("y ~ ", paste(dimnames(xx)[[2]], collapse = " + "), " - 1",
+                         collapse = "")
+    mod <- glm( as.formula(mod_formula), family=binomial,
                 data=as.data.frame(xx) )
     beta[,j] <- mod$coef
   }
   beta0 <- beta ## one-sided logit estimators
 
   bmat <- mcmc$eps2*matrix(1,nx,nnations)
-
-  # Why are these codes here? Duplicated from above?
-  # opp <- matrix(F,nfirms,nnations)  # The opportunity matrix T=offer,F=no offer
-  # opp[cbind(1:nfirms,choice)] <- T  # people are offered jobs they have!
-  # opp[,1] <- T                     # Unemployment always offered
-
-
   tmp <- as.matrix(ww[choice,(1:nw)])
   # Anh: tmp IS the characteristics of accepted job.
   # It's the same as dat[ , c("presmean", "autmean")] / 10 though...
@@ -98,14 +79,13 @@ f_tslogit <- function(dat = dat,
   # Anh: don't know what wa is? why take the sum across the (2149) accepted jobs?
   wa <- apply(tmp,2,sum) # characteristics of accepted jobs; used in alpha update
 
-
   avec <- exp(ww%*%alpha) # Anh: right now alpha is [0, 0], so avec is [1, 1]
   den <- opp%*%avec          # vector of denominators in acceptance probs
   eta <- xx%*%beta           # worker side linear predictors (big matrix)
   # nfirms x nnations, same as opp
 
   # Initialize storage
-  acrate <- rep(0,3)                  # Metropolis acceptance rates
+  acrate <- rep(0,3)                  # Metropolis acceptance rates for O, alpha, beta
   B <- mcmc$nsave*mcmc$nskip          # number of cycles
   asave <- matrix(NA,mcmc$nsave,nw)   # saved alphas and betas
   bsave <- matrix(NA,mcmc$nsave,nx*(nnations-1) )
@@ -125,11 +105,11 @@ f_tslogit <- function(dat = dat,
     # Update opportunity sets (do things in parallel across workers
     # because of conditional independence)
 
-    # Sample a random job for each  worker and consider switching it
-    new <- sample( 1:nnations, size=nfirms, replace=T ) # don't sample unemp. (1)
+    # Sample a random country offer for each firm and consider switching it
+    new <- sample( 1:nnations, size=nfirms, replace=T )
     ind <- cbind( 1:nfirms, new )
     # The offers under consideration are:
-    oo <- opp[ind] # A: nfirms logical vector, indicating whether newly sampled job is currently offered
+    oo <- opp[ind] # A: nfirms logical vector, indicating whether newly sampled offer is currently offered
     plusminus <- ifelse(oo,-1,1) # A: convert T/F oo into -1/1
     # Part of MH ratio from P(A|O,alpha)
     denstar <- den+avec[new]*plusminus
@@ -140,8 +120,8 @@ f_tslogit <- function(dat = dat,
 
     # Accept or not (in parallel)
     uu <- runif(nfirms)
-    ok <- (uu <= rr1*rr2 ) # A: ????
-    ok[new == choice] <- F  # don't change an offer for an accepted job
+    ok <- (uu <= rr1*rr2 )
+    ok[new == choice] <- F  # don't change an offer for an accepted location
     if( any(ok)  )
     {
       oonew <- oo
@@ -214,12 +194,13 @@ f_tslogit <- function(dat = dat,
 
   d2 <- date()
 
-  results <- list( mcmc=mcmc,  acrate=acrate,
-                   asave=asave,bsave=bsave,logpost=cbind(logpost1,logpost2),
-                   time=c(d1,d2), data="gss18cat.raw" )
+  results <- list( mcmc=mcmc, acrate=acrate,
+                   asave=asave, bsave=bsave,
+                   logpost=cbind(logpost1,logpost2),
+                   time=c(d1,d2), data=dat, xx=xx, ww=ww )
 
-  save( results, file="../results/test1.RData" )
+  output = paste("../result/tslogit_", gsub("[ \\.]", "-", paste(eps1, eps2)), "_",
+                 strftime(Sys.time(), format = "%m-%d_%H-%M"),
+                 ".RData", sep = "")
+  save(results, file=output)
 }
-
-
-#save( results, file="RData/test2.RData" )  ## different seed

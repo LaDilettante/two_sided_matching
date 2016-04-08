@@ -36,40 +36,111 @@
 \begin{document}
 \maketitle
 
-\section{Notation}
 
-Characteristics (observed data):
-\begin{itemize}[noitemsep]
-\item $\underset{(njobs \times nw)}{WW}$ is a matrix of job characteristics, whose $j$th row $\underset{(nw \times 1)}{WW_j}$ is job $j$'s characteristics
-\item $\underset{(nworkers \times nx)}{XX}$ is a matrix of worker characteristics, whose $i$th row $\underset{(nx \times 1)}{XX_i}$ is the characteristics of worker $i$
-\end{itemize}
+\section{Introduction}
 
-Preferences (parameters to be estimated):
-\begin{itemize}[noitemsep]
-\item $\underset{(nw \times 1)}{\alpha}$: a vector of workers' preference for jobs' characteristics
-\item $\underset{(nx \times njobs)}{\beta}$: a matrix of employers' preference for workers' characteristics. Each employer has his own set of preference. $\beta_j$--- $\beta$'s $j$th column---is the preference of employer $j$.
-\end{itemize}
+We introduce a model that can estimate the utility of both sides, building from their utility function up.
 
-Matching structure:
-\begin{itemize}
-\item Worker $i$'s opportunity set is $O_i$, which includes unemployment and other jobs that are offered to worker $i$.
-\end{itemize}
+\section{Utility}
 
-\section{Preliminaries}
+\subsection{Officials' utility}
 
-Similar to multinomial logit (the firm is choosing between countries, similar to multinomial logit)
+Following \citet{Logan1998}, we consider the utility function of the two actors, the official and the firm.\footnote{For ease of exposition, in this section I will refer to country $j$ as official $j$} For official $j$, the utility of having firm $i$ investing in his country is:
 
 \begin{align}
-p(A_i | O_i, \alpha_i) = \frac{\exp(\alpha'W_{a_i})}{\sum\limits_{j:j \in O_i} \exp(\alpha'W_j)} \label{eq:conditional_probability_of_accept}
+U_j(i) &= \bm{\beta}_j' X_i + \epsilon_{1ij} \\
 \end{align}
 
-The country is deciding whether to make the offer to the firm or not, a logistic decision
+where
+
+\begin{align*}
+\beta_j &\text{ is a vector of official $j$'s preference for relevant characteristics of firms} \\
+x_i &\text{ is a vector of firm $i$'s measured values on those characteristics} \\
+\epsilon_{1ij} &\text{ is the unobserved component that influences official $j$'s utility}
+\end{align*}
+
+On the other hand, the utility of not having firm $i$ investing is:
+
+\begin{align}
+U_j(\neg i) &= b_j + \epsilon_{0ij}
+\end{align}
+
+where
+
+\begin{align*}
+b_j &\text{ is the baseline utility of official $j$ without any firm investing} \\
+\epsilon_{0ij} &\text{ is the component that influences official $j$'s utility}
+\end{align*}
+
+For each firm $i$, official $j$ will make an offer to invest if $U_j(i) > U_j(\neg i)$. Some relevant firm characteristics (i.e. $X_i$) that the official may consider are: the potential for spillover, jobs, and capital. The corresponding $\beta$'s represent the official's preference for these characteristics.
+
+Following the discrete choice literature, if we model $\epsilon_{1ij}, \epsilon_{0ij}$ as having the type I extreme distribution, the probability of official $j$ making an offer to firm $i$ is the familiar binomial logit:
+
+\begin{align}
+Pr(o_{ij} = 1) &= Pr(U_j(i) > U_j(\neg i)) \\
+&= Pr(\epsilon_{0ij} - \epsilon_{1ij} <  \bm{\beta}_j ' X_i - b_j) \\
+&= \frac{\exp({\bm{\beta}_j'X_i})}{1 + \exp({\bm{\beta}_j'X_i})} \label{eq:prob_offer_ij}
+\end{align}
+
+where \Cref{eq:prob_offer_ij} is due to the fact that the difference between two type I extreme error has a logistic distribution. We can absorb the constant term $b_j$ into $X_i$ by adding an intercept column into $X_i$.
+
+The probability that firm $j$ gets an opportunity set $j$ is:
 
 \begin{align}
 p(O_i | \bm{\beta}) &= \prod_{j \in O_i} p(o_{ij} = 1 | \bm{\beta}) \prod_{j \notin O_i} p(o_{ij} = 0 | \bm{\beta}) \\
-&= \prod_{j \in O_i} \frac{\exp{\bm{\beta_j} ' X_i}}{1 + \exp(\bm{\beta_j}' X_i)}
- \prod_{j \notin O_i} \frac{\exp{\bm{\beta_j} ' X_i}}{1 + \exp(\bm{\beta_j}' X_i)} \label{eq:conditional_probability_of_offer}
+&= \prod_{j \in O_i} \frac{\exp(\bm{\beta_j} ' X_i)}{1 + \exp(\bm{\beta_j}' X_i)}
+ \prod_{j \notin O_i} \frac{\exp(\bm{\beta_j} ' X_i)}{1 + \exp(\bm{\beta_j}' X_i)} \label{eq:conditional_probability_of_offer}
 \end{align}
+
+\subsection{Firms' utility}
+
+On the other side, for firm $i$, the utility of investing in country $j$ is:
+
+\begin{align}
+V_i(j) &= \alpha' W_{j} + v_{ij}
+\end{align}
+
+where
+
+\begin{align*}
+\alpha &= \text{a vector of firms' preference for relevant characteristics of countries} \\
+w_{ij} &= \text{a vector of country $j$ measured values on those characteristics} \\
+v_{ij} &= \text{unobserved component that influences firm $i$'s utility}
+\end{align*}
+
+Firm $i$ evaluates all the countries that make an offer and chooses the one that brings the highest utility. In our model, the relevant country characteristics are: labor quality, infrastructure, and market size. Since all firms are considered having homogeneous preferences, $\alpha$ does not have a subscript $i$. The model can be easily extended so that there is heterogeneous preference among firms.
+
+If $v_{ij}$ is modeled as having a type I extreme error distribution, then the probability that firm $i$ will accept the offer of official $j$ out of all the offers it has in its opportunity set $O_i$ is
+
+\begin{align}
+p(A_i = a_i | O_i, \alpha_i) = \frac{\exp(\alpha'W_{a_i})}{\sum\limits_{j:j \in O_i} \exp(\alpha'W_j)} \label{eq:conditional_probability_of_accept}
+\end{align}
+
+\section{Estimate the actors' preference}
+\label{sec:tsl_estimate}
+
+EM algorithm does not produce standard error.
+
+Our data contains a random sample of firms and the countries in which they invest. We want to find the parameters that maximize the likelihood of this observed data. This likelihood is:
+
+\[
+L = \prod_{i,j: \text{i is matched with j}} Pr(A_{ij})
+\]
+
+where $Pr(A_{ij})$ is the probability of a specific match between firm $i$ and country $j$. $Pr(A_{ij})$ can be calculated as follows:
+
+\begin{align}
+&Pr(A_{ij}) \\
+&= \sum_{k=1}^R Pr(A_{ij}|S_{ik}) Pr(S_{ik}) \\
+&= \sum_{k=1}^R Pr(A_{ij} | S_{ik}) \prod_{m \in O_k} Pr(o_{im} = 1) \prod_{n \in \bar O_k} Pr(o_{in} = 0) \\
+&= \sum_{k:j \in O_k} \frac{\exp(\alpha w_{ij})}{\displaystyle\sum_{h \in O_k} \exp(\alpha w_{ih})} \prod_{m \in O_k, m > 0} \frac{\exp(\beta x_{i})}{1 + \exp(\beta x_i)} \\
+&\times \prod_{n \in \bar O_k, n > 0} \frac{1}{1 + \exp(\beta x_i)}
+\end{align}
+
+Here, the term $Pr(o_{ij} = 1)$ represents the probability that country $j$ makes an offer to firm $i$, through which the official's preference enters our estimation. On the other side, $Pr(A_{ij}) | S_{ik}$ is the probability that firm $i$ will accept the offer from official $j$, given the offering set $O_k$. The firm's preference is reflected in our estimation through this term, $Pr(A_{ij})|S_{ik}$.\footnote{The appendix shows how these terms are derived.}
+
+It is important to note that the offering set $O_k$ contains \textit{all} offers that firm $i$ receives, only one of which is the observed match between firm $i$ and country $j$. The intuition is that if we observe the full set of offers that all officials make to all firms, then by looking at the final match we can see how firms and officials reject inferior offers and thus deduce their preferences.
+
 \section{Update opportunity set}
 
 Target distribution for a firm $i$ 
@@ -127,7 +198,12 @@ If we plug in \Cref{eq:conditional_probability_of_accept},
 
 \begin{align}
 MH_\alpha &= \prod_i \left[ \frac{\exp(\alpha^{*\prime} W_{a_i})}{\exp(\alpha' W_{a_i})} \times \frac{\sum\limits_{j:j \in O_i} \exp(\alpha' W_j)}{\sum\limits_{j:j \in O_i} \exp(\alpha^{*\prime}W_j)} \right] \\
-&= \prod_i \left[ \exp(\epsilon_\alpha ' W_{a_i}) \times \frac{\sum\limits_{j:j \in O_i} \exp(\alpha' W_j)}{\sum\limits_{j:j \in O_i} \exp(\alpha^{*\prime}W_j)} \right] \\
+&= \prod_i \left[ \exp(\epsilon_\alpha ' W_{a_i}) \times \frac{\sum\limits_{j:j \in O_i} \exp(\alpha' W_j)}{\sum\limits_{j:j \in O_i} \exp(\alpha^{*\prime}W_j)} \right]
+\end{align}
+
+Finally, we log transform the MH acceptance ratio for numerical stability.
+
+\begin{align}
 \log MH_\alpha &= \sum_i \left[ \epsilon_\alpha' W_{a_i} + \log\left(\sum\limits_{j:j \in O_i} \exp(\alpha' W_j)\right) - \log\left(\sum\limits_{j:j \in O_i} \exp(\alpha^{*\prime} W_j)\right) \right]
 \end{align}
 
@@ -141,6 +217,26 @@ p(\bm{\beta}|A, O, \alpha) &= \frac{p(O, A, \alpha, \bm{\beta})}{p(A, O, \alpha)
 
 We propose a new $\bm{\beta}^*$ using a symmetric proposal distribution that sample $\bm{\beta}^*$ in a box with side length $\epsilon_\beta$
 
+Metropolis-Hasting acceptance ratio:
 
+\begin{align}
+MH_\beta = \frac{p(\beta^* | A, O, \alpha)}{p(\beta | A, O, \alpha)} &= \frac{p(A_i | O_i, \alpha)p(O_i|\bm{\beta}^*)}{p(A_i | O_i, \alpha)p(O_i|\bm{\beta})} \label{eq:updatebeta_MHratio_simplify} \\
+&= \frac{p(O_i|\bm{\beta}^*)}{p(O_i|\bm{\beta})} \label{eq:updatebeta_MHratio_final}
+\end{align}
+
+where \Cref{eq:updatebeta_MHratio_simplify} is due to the flat prior on $\beta$ and the symmetric proposal distribution.
+
+We plug in \Cref{eq:conditional_probability_of_offer},
+
+\begin{align}
+MH_\beta &= \prod_i \left[ \prod\limits_{j \in O_j}\frac{ \exp(\beta_j^{*\prime}X_i)}{ \exp(\beta_j^{\prime}X_i)} \times \prod\limits_{j}\frac{1 + \exp(\beta_j^{*\prime}X_i)}{1 + \exp(\beta_j^{\prime}X_i)} \right] \\
+\log MH_\beta &= \sum_i \left[ \sum_{j \in O_i} \beta_j^{*\prime}X_i - \beta_j^{\prime}X_i + \sum_{j} \log(1 + {\exp({\beta_j^{*\prime}X_i})) - \log(1 +  \exp(\beta_j^{\prime}X_i})) \right]
+\end{align}
+
+In the MCMC implementation, since $\bm{\beta}$ is high dimensional, we conduct multiple block Metropolis Hastings, updating several $\beta$'s at one time.
+
+\clearpage
+\bibliographystyle{chicago}
+\bibliography{library}
 
 \end{document}

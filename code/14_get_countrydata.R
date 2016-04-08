@@ -41,10 +41,12 @@ d_wdi <- d_wdi %>%
 
 # Supplement with education data
 
-d_avgschooling <- read.csv("../raw_data/mean_year_of_schooling.csv")
+d_avgschooling <- read.csv("../raw_data/mean_year_of_schooling.csv",
+                           na.strings = "..")
+d_avgschooling$X2003 <- (d_avgschooling$X2001 + d_avgschooling$X2005) / 2
 d_avgschooling <- melt(d_avgschooling, id.vars = "Country", variable.name = "year") %>%
   mutate(year = as.numeric(str_sub(year, start = 2)),
-         avg_schooling_years = as.numeric(value),
+         avg_schooling_years = value,
          iso2c = countrycode(Country, origin = "country.name",
                              destination = "iso2c")) %>%
   select(iso2c, year, avg_schooling_years)
