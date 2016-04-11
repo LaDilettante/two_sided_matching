@@ -5,9 +5,9 @@
 \usepackage{amsmath}               % great math stuff
 \usepackage{amsfonts}              % for blackboard bold, etc
 \usepackage{amsthm}                % better theorem environments
-\usepackage{bm}					   % bm for bold math
+\usepackage{bm} % \bm for bold math
 
-\usepackage{enumitem} % for [noitemsep]
+\usepackage{enumitem}
 \usepackage{rotating} % for sideway table
 \usepackage{caption} % for newline in caption
 \usepackage{xcolor}
@@ -29,31 +29,18 @@
 \usepackage{natbib}
 \bibpunct{(}{)}{;}{a}{}{,} % no comma between author and year
 
-\title{The political determinants of FDI spillover}
+\title{Metropolis-Hasting for two-sided logit}
 \author{Anh Le}
 
 
 \begin{document}
 \maketitle
 
-\input{introduction}
-
-\input{method_advantage}
-
 \input{MH_twosided_logit}
-
-\section{Results}
-
-Host GDP is negative, host GDP per capita is positive, host democracy is positive, agree with \citep{Eicher2012}
-
-\newpage
-\appendix
-\input{appendix_EM}
-
-\input{appendix_MH_ratio}
 
 \clearpage
 \bibliographystyle{chicago}
 \bibliography{library}
+
 
 \end{document}

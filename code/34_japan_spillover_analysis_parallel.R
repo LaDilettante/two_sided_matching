@@ -20,8 +20,8 @@ dat <- dat %>% inner_join(d_nation_id, by = "nation")
 
 # ---- Create a grid of step sizes ----
 
-eps1 <- c(0.01, 0.05, 1, 2, 5)
-eps2 <- c(0.01, 0.05, 1, 2, 5)
+eps1 <- c(0.01, 0.02, 0.05)
+eps2 <- c(0.0005, 0.001, 0.005)
 eps_grid <- expand.grid(eps1=eps1, eps2=eps2)
 
 # ---- Run the tslogit MCMC ----
@@ -30,9 +30,10 @@ country_vars = c("gdp", "gdppc", "democracy", "avg_schooling_years")
 
 registerDoMC(cores=detectCores()/2)
 
-writeLines(c(""), "tslogit_parallel.log") # Clear out log file
+logfile <- "tslogit_parallel2.log"
+writeLines(c(""), logfile) # Clear out log file
 foreach(eps1 = eps_grid$eps1, eps2 = eps_grid$eps2) %dopar% {
-  sink("tslogit_parallel.log", append=TRUE) # Write to log file
+  sink(logfile, append=TRUE) # Write to log file
   f_tslogit(dat = dat, nskip = 200, nsave = 20000,
             eps1=eps1, eps2=eps2,
             firm_vars = firm_vars, country_vars = country_vars)
