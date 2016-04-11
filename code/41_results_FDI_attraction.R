@@ -1,4 +1,4 @@
-# load("../result/tslogit_0-01-0-05_04-09_12-57.RData")
+# load("../result/tslogit_0-01-5e-04_04-11_12-27.RData")
 
 head(results$dat)
 results$acrate
