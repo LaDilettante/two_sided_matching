@@ -37,7 +37,7 @@ logfile <- "tslogit_asia_parallel.log"
 writeLines(c(""), logfile) # Clear out log file
 foreach(eps1 = eps_grid$eps1, eps2 = eps_grid$eps2) %dopar% {
   sink(logfile, append=TRUE) # Write to log file
-  f_tslogit(dat = dat, nskip = 1, nsave = 2,
+  f_tslogit(dat = dat, nskip = 100, nsave = 20000,
             eps1=eps1, eps2=eps2,
             firm_vars = firm_vars, country_vars = country_vars)
 }
