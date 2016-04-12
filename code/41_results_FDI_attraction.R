@@ -1,4 +1,7 @@
-# load("../result/tslogit_0-01-5e-04_04-11_12-27.RData")
+# Between 20 and 50 percent is good
+load("../result/tslogit_0-01-0-005_04-12_04-47.RData")
+load("../result/tslogit_0-05-0-001_04-12_05-11.RData")
+load("../result/tslogit_0-05-0-005_04-12_04-41.RData")
 
 head(results$dat)
 results$acrate
@@ -18,7 +21,7 @@ for (i in 1:nw) {
 par(mfrow = c(1, 1))
 
 # Results alpha
-c_burnin <- 6000
+c_burnin <- 10000
 for (i in 1:nw) {
   print(quantile(results$asave[c_burnin:nrow(results$asave), i],
                  probs = c(0.025, 0.5, 0.975)))
