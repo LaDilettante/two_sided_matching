@@ -9,7 +9,14 @@ d <- d %>%
   mutate(continent = countrycode(d$cty_1, origin = "country.name", destination = "continent"),
          region = countrycode(d$cty_1, origin = "country.name", destination = "region"))
 
-d %>% filter(continent == "Europe") %>% group_by(year) %>%
-  summarise(m = mean(entry_res, na.rm = T)) %>% print(n = 100)
+# ---- Visualize China ----
 
-d %>% filter(cty == "fin") %>% select(year, entry_res)
+
+d_china <- d %>% filter(cty_1 == "china")
+pdf("../figure/china_fdi_restriction.pdf", w = 7, h = 3.5)
+ggplot(d_china, aes(year, entry_res)) +
+  geom_line() + geom_point() +
+  labs(y = "Share of Industries with Restrictions",
+       x = "Year", title = "China's FDI Ownership Restriction") +
+  scale_x_continuous(breaks = seq(1970, 2000, by = 5)) + theme_bw()
+dev.off()
