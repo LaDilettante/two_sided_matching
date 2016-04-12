@@ -88,7 +88,7 @@ f_tslogit <- function(dat = dat,
   acrate <- rep(0,3)                  # Metropolis acceptance rates for O, alpha, beta
   B <- mcmc$nsave*mcmc$nskip          # number of cycles
   asave <- matrix(NA,mcmc$nsave,nw)   # saved alphas and betas
-  bsave <- matrix(NA,mcmc$nsave,nx*(nnations-1) )
+  bsave <- matrix(NA,mcmc$nsave,nx*nnations )
   logpost1 <- numeric(mcmc$nsave)      # log P(O|beta)
   logpost2 <- numeric(mcmc$nsave)      # log P(A|O,alpha)
 
@@ -186,7 +186,7 @@ f_tslogit <- function(dat = dat,
       logpost1[isave] <- lp1
       logpost2[isave] <- lp2
       asave[isave,] <- c(alpha)
-      bsave[isave,] <- c(beta[,2:nnations]) # vectorize
+      bsave[isave,] <- c(beta[,1:nnations]) # vectorize
       isave <- isave+1
     }
   }
