@@ -12,7 +12,26 @@ One the other hand, I also want to raise the issue of the quality of FDI.
 
 Implicit in this phrase are two under-examined ideas: one is that country always want to attract FDI. Two is that it does not differentiate between the type of FDI that a country would want.
 
-\subsection{Countries' demand for FDI}
+\section{The need for a new model}
+
+Summarize the problems
+
+To deal with this problem, I adopt the two-sided matching approach, previously used in the labor market and marriage market. This approach will be able to solve the above problems in several ways.
+
+\subsection{Measuring Multinational Corporations' Activities}
+
+For most of political science theory regarding FDI, we ultimately care about the scale of multinationals' activities in a country, and not necessarily about how much FDI has crossed through its border. Indeed, we theorize about how multinationals may reduce their activities for fear of expropriation, and how the host country's political factors can induce multinationals to invest more with a credible commitment not to expropriate. It is also the scale of multinationals' activities that determines how many jobs are created or how much of the domestic market is competed away, engendering labor's support and local business' lament.
+
+To measure the scale of multinationals' activities, the vast majority of political science works uses FDI stock and flow \citep{Jensen2003, Ahlquist2006, Beazer2011, Graham2010}. However, as \citet{Kerner2014} points out, these measures, whose original purpose is to monitor balance of payments, are often misleading about multinationals' activities. FDI flow do not count locally raised capital and reinvested earnings since they do not cross any border. FDI stock calculated at market value fluctuates based on market price, unrelated to firms' behavior. FDI stock calculated at historical value, which records asset value at the time it was acquired, is more stable and appropriate to measure the scale of MNCs' activities. However, due to the onerous data requirements, most countries measures FDI stock by simply adding up FDI flow across years.
+
+Given the interest of political science theory in MNCs' activities, \citet{Kerner2014} suggests less use of FDI stock and flow and more use of firm-level statistics. While firm-level data has become more abundant in recent years,\footnote{Examples of firm-level data include the US Bureau of Economic Analysis (BEA)'s survey of all US firms abroad, Tokyo Keizai's Overseas Japanese companies database (\textit{Kaigai Sinshutsu Kigyou Souran}), World Bank's Enterprise Survey, and Orbis database of companies worldwide.} appropriate methods have not been developed. Given the data structure of a set of firms investing in a set of countries, one may consider a dyadic-based analysis, frequently used in the International Relations literature. In such analysis, the unit of observation is a firm-country dyad, and the model used is typically an OLS regression. Each dyad is assumed to be independent of each other, and any bias due to interdependency between dyads is fixed via post-estimation procedures, such as clustered standard errors \citep{Dorff2013}. 
+
+However, this approach would be inappropriate to analyze MNCs' investment location. Once a firm chooses to invest in a country, it is by definition not investing in another country. Therefore, firm-country dyads deterministically constrained one another and cannot be modeled as independent draws from a common distribution.
+
+The two-sided matching model would be able to deal with this problem.
+
+
+\subsection{Estimating Countries' Demand for FDI}
 
 Recognizing the need to theorize about the demand for FDI, scholars have recently paid more attention to this area \citep{Pinto2013, Pandya2016}. Similar to the rich IPE literature in trade and exchange rate \citep{Broz2001, Milner2005a}, these studies argue that countries' demand for FDI varies according to FDI's distributive effect on their domestic constituencies.\footnote{The alternative to preference as the explanan of FDI flow is institutional characteristics.} In this theoretical framework, labor supports FDI because foreign firms bring capital that increases the demand for labor and raises productivity, both of which lead to higher wage. On the other hand, domestic firms oppose FDI because foreign firms compete with them for labor, local inputs, and markets. Both \citet{Pinto2013} and \citet{Pandya2016} formulate their theories as a variant of this labor-vs-business tension, which surfaces in the former work as left-vs-right governments, and in the latter as democratic-vs-authoritarian regimes.
 
@@ -29,32 +48,13 @@ In contrast to \citet{Pinto2013}'s statistical approach, \citet{Pandya2014, Pand
 \label{fig:china_fdi_restriction}
 \end{figure}
 
-\subsection{The measurement of FDI}
-
-From Kerner, ``I suggest that most of what we claim requires FDI data does not. Instead, we are asking questions about employment, payrolls, capital inputs, and output from FDI. We should measure these instead.''
-
-First is the aggregate nature of FDI data used by political science research.
-
-FDI flow exclude locally raised finance data. This is appropriate for the purpose of measuring balance of payment, but not so much when we care about the actual size of the foreign firms in the country (808). The IMF has admitted to this problem, even suggesting in 2005 that FDI 
-inflows data has become “
-hardly applicable to sound economic analyses” 
-due to this
-(Ouddeken 2005)
 
 
-FDI stock at market value fluctuates based on market price as well, something unrelated to the FDI firm behavior. FDI stock at historical value is simply the accumulation of FDI flow (as other countries calculate it).
+\subsection{Countries' preference for specific FDI characteristics}
 
-Most of FDI literature has used FDI flow \citep{Jensen2003, Ahlquist2006, Beazer2011, Graham2010}. Some debate on measuring FDI, but it's on outliers and FDI or FDI/GDP \citep{Li2009}
+This section talks about the need to look at different types of MNCs.
 
-Second, it allows us to get at the preferences of country. Previously, most of the research is on the preference of firms. Only two works by Pondya and Pablo Pinto looks at the other side.
+While political science literature has focused almost exclusively on the quantity of FDI, treatment all FDI as a homogeneous flow of capital, policy makers seem to pay much more attention to distinguishing types of FDI. Commenting on the role of International Investment Agreements (IIAs), \citet{UNCTAD2015} says, ``Today, increasing the quantity of investment is not enough. What matters is its quality, i.e. the extent to which investment delivers concrete sustainable development benefits.'' Governments from Ireland, Ghana, to China all offer various forms of tax incentives and fee waivers to attract FDI that invests in a remote region, brings new technology, or focuses on exporting \citep{Ricupero2000}. Since 2006, China's official FDI policy has been ``quality over quantity,'' promoting FDI with intense R\&D and in high-productivity sectors \citep{Guangzhou2011}.\footnote{All of these models also cannot investigate countries' preference for specific firms' characteristics. Pondya's look at cross industry, but because of data issue she can only do cross-sectional at the industry level instead of country-industry level. This level of aggregation is dubious: the same industry in one country is different from another country. For example, automobile value chain is vastly different across countries (example here). All of the industry estimates are based on US firms, which really cannot be realized to others. (It can for some basic industry characteristics / technology level, not for whether an industry is market oriented or not.)}
 
-The theoretical interest is there as scholars start to fill in the other side of the equation. However, the empirics left wanting.
+Disaggregating FDI has been a very difficult task. The few existing attempts can only use detailed data from one country or limit the sample to OECD countries \citep{Alfaro2003, Alfaro2007, Javorcik2004}. Using firm level data, this is not as challenging, but brings up the need for an appropriate model.
 
-All of these models also cannot investigate countries' preference for specific firms' characteristics. Pondya's look at cross industry, but because of data issue she can only do cross-sectional at the industry level instead of country-industry level. This level of aggregation is dubious: the same industry in one country is different from another country. For example, automobile value chain is vastly different across countries (example here)
-
-All of the industry estimates are based on US firms, which really cannot be realized to others. (It can for some basic industry characteristics / technology level, not for whether an industry is market oriented or not.)
-
-My data use capital size, which is great because that's exactly what countries look for. 
-
-
-\citep[295]{Yamawaki1991} says that the data ``list virtually all the foreign subsidiaries of Japanese companies''
