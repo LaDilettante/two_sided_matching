@@ -1,3 +1,5 @@
+library(coda)
+
 # Between 20 and 50 percent is good
 load("../result/tslogit_0-05-5e-04_04-12_05-11.RData")
 load("../result/tslogit_0-05-0-001_04-12_05-11.RData")
@@ -13,6 +15,10 @@ str(results, max.level = 2)
 nw <- dim(results$asave)[2]
 nx <- dim(results$bsave)[2] / length(unique(results$dat$nation_id))
 
+dim(results$asave)
+
+asave <- mcmc(results$asave)
+plot(asave)
 # Convergence
 par(mfrow = c(2, 2))
 for (i in 1:nw) {

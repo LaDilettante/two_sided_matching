@@ -1,0 +1,26 @@
+\section{Application}
+\label{sec:application}
+
+In this section, I applying the two-sided matching model to study the investment location of Japanese firms overseas. The sample includes X countries: Vietnam, Thailand, etc. I focus on manufacturing firms to have a systematic measures of their technology intensity.
+
+For countries' characteristics that firms consider, I include:
+
+\begin{itemize}
+\item Market size: MNCs are expected to prefer countries with a large market size, presenting MNCs with many new customers. Indeed, this has been often cited as the allure of China to MNCs \citep{Luo2010}. I thus follow the standards in the literature and include log GDP (constant 2005 US\$), taken from the World Bank's World Development Indicators.
+
+\item Level of development: MNCs are expected to prefer countries with a high level of development. A developed economy has consumers with high purchasing power and better infrastructure. To measure development, I use log GDP per capita (constant 2005 US\$) from World Development Indicators.
+
+\item Labor quality: As one primary factor of production, labor matters greatly to firms' productivity and profit. To measure labor quality, I use the average years of schooling of adult, taken from the UNDP's Human Development Report.\footnote{Since Taiwan is not included in UNDP's and World Bank's data, I collected its statistics from the Taiwanese Statistical Website.}
+
+\item Democracy: Democracy has been a mainstay in the political science literature on FDI. Scholars have argued that MNCs want to invest in democratic regimes for various reasons, including stable policy, credible commitment, and strong property rights \citep{Ahlquist2006, Li2003, Jensen2003}. On the other hand, recent works have also argued that democratic regimes want FDI more than autocratic regimes \citep{Pandya2016}. Thus, it is unclear whether the observed high level of FDI in democracies is due to the push or the pull factors. By controlling for countries' preference in the two-sided matching model, I can re-visit the effect of democracies on firms' utility. I measure democracy using the binary Demoracy \& Dictatorship, developed by \citet{Cheibub2009b}.
+\end{itemize}
+
+For firms' characteristics that countries consider, I include:
+
+\begin{itemize}
+\item Capital size (in US\$): A main argument for the benefit of FDI is that it brings capital to the country, improving labor productivity. MNCs' capital is especially important for developing countries, which cannot muster much domestic capital from their poor population. The capital size of a firm is included in the Japanese Overseas Business dataset.
+
+\item Labor size: Similarly, a reputed benefit of FDI is that it creates jobs, generating not just economic growth but also increasing the government's popularity among the populace. The total employees of a firm is included in the Japanese Overseas Business dataset.
+
+\item Technology intensity: I proxy for a firm's technology intensity by the industry to which it belongs. \citet{OECD2009} categorizes ISIC industries into four level of technology intensity---low, medium low, medium high, and high---according to the level of R\&D expenditure divided by sales. I convert the industry classification of firms in my data from SIC 3 to ISIC and categorize their technology intensity from 1 to 4, with 1 being low and 4 being high. On several occasions, one industry in SIC 3 matches to multiple ISIC (rev 3) industries or none at all. In the former case, I take the average across matched ISIC industries. In the latter case, the data is missing and removed from the dataset.
+\end{itemize}
