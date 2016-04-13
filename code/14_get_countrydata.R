@@ -68,7 +68,7 @@ d_dd <- d_dd_raw %>%
   filter(year >= c_startyear, year <= c_endyear) %>%
   mutate(iso2c = countrycode(cowcode, origin="cown", destination="iso2c", warn=TRUE)) %>%
   mutate(democracy = ifelse(gwf_nonautocracy == "democracy", 1, 0)) %>%
-  select(iso2c, country = gwf_country, year, democracy, cowcode)
+  select(iso2c, country = gwf_country, year, democracy, spell = gwf_spell, cowcode)
 
 # ---- Save data ----
 

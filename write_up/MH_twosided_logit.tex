@@ -1,9 +1,11 @@
 \section{The Two-Sided Matching Model}
 \label{sec:model}
 
+This section lays out the set-up of the two-sided matching model, including the utilities of countries' officials and of MNCs. Then, the matching process is a natural consequence of actors' choosing the best option available to them.
+
 \subsection{Officials' Utility}
 
-Following \citet{Logan1998}, we consider the utility function of two actors, the official and the firm.\footnote{For ease of exposition, in this section I will refer to country $j$ and official $j$ interchangeably.} For official $j$, the utility of having firm $i$ investing in his country is:
+Following \citet{Logan1998}, we consider the utility function of two actors, the official and the firm.\footnote{For ease of exposition, in this section I will refer to country $j$ and official $j$ interchangeably.} For official $j$, the utility of having firm $i$ invest in his country is:
 
 \begin{align}
 U_j(i) &= \bm{\beta}_j' X_i + \epsilon_{1ij}
@@ -42,7 +44,7 @@ Pr(o_{ij} = 1) &= Pr(U_j(i) > U_j(\neg i)) \\
 
 where \Cref{eq:prob_offer_ij} is due to the fact that the difference between two Gumbel-distributed random variables has a logistic distribution. We make the constant term $b_j$ disappear into $\bm{\beta}_j$ by adding an intercept column to the matrix of firm characteristics $X_i$.
 
-The opportunity set of firm $i$ is the set of all countries that welcomes firm $i$ to invest. If we know the preferences of all countries, we can calculate the probability that firm $i$ gets an opportunity set $O_i$ as follows:
+We call the set of all countries that welcome firm $i$ to invest the opportunity set of firm $i$. If we know the preferences of all countries, we can calculate the probability that firm $i$ gets an opportunity set $O_i$ as follows:
 
 \begin{align}
 p(O_i | \bm{\beta}) &= \prod_{j \in O_i} p(o_{ij} = 1 | \bm{\beta}) \prod_{j \notin O_i} p(o_{ij} = 0 | \bm{\beta}) \\
@@ -50,7 +52,7 @@ p(O_i | \bm{\beta}) &= \prod_{j \in O_i} p(o_{ij} = 1 | \bm{\beta}) \prod_{j \no
  \prod_{j \notin O_i} \frac{\exp(\bm{\beta_j} ' X_i)}{1 + \exp(\bm{\beta_j}' X_i)} \label{eq:conditional_probability_of_offer}
 \end{align}
 
-In our observed data, since we only observe the final matching of firms and countries, this opportunity set is unobserved. As \Cref{sec:tsl_estimate} will discuss, we use the Metropolis-Hastings algorithm to sample from and approximate $p(O_i | \bm \beta)$.
+In our observed data, since we only observe the final matching of firms and countries, this opportunity set is unobserved. As \Cref{sec:tsl_estimate} will discuss, we use the Metropolis-Hastings algorithm to approximate the posterior distribution of the opportunity set.
 
 \subsection{Firms' utility}
 
@@ -68,7 +70,9 @@ W_j &\text{ is a vector of country $j$ measured values on those characteristics}
 v_{ij} &\text{ is the unobserved component that influences firm $i$'s utility}
 \end{align*}
 
-Firm $i$ evaluates all the countries that welcome it to invest and chooses the country that brings the highest utility. In our model, relevant country characteristics can be: labor quality, level of development, and market size. Since all firms are considered having homogeneous preferences, $\alpha$ does not have a subscript $i$. The model can be easily extended so that there is heterogeneous preference among firms.
+Firm $i$ evaluates all the countries that welcome it to invest and chooses the country that brings the highest utility. This choice of firms concludes the matching process, resulting in the observed final match between a firm and a country in our data.
+
+In our model, relevant country characteristics can be: labor quality, level of development, and market size. Since all firms are considered having homogeneous preferences, $\alpha$ does not have a subscript $i$. The model can be easily extended so that there is heterogeneous preference among firms.
 
 If $v_{ij}$ is modeled as having a Gumbel distribution, then the probability that firm $i$ will accept the offer of official $j$ out of all the offers in its opportunity set $O_i$ takes the multinomial logit form \citep{Cameron2005}:
 
@@ -81,16 +85,16 @@ p(A_i = a_i | O_i, \alpha_i) = \frac{\exp(\alpha'W_{a_i})}{\sum\limits_{j:j \in 
 
 While \citet{Logan1996, Logan1998} successfully reformulate the random utility mode in the discrete choice literature to a two-sided setting, the estimation of the two-sided model remains challenging. The key difficulty lies in the fact that we do not know the full sets of offers that firms receive from countries. Therefore, the likelihood function is incomplete, missing the data on firms' opportunity sets. With an incomplete likelihood function, we cannot use Maximum Likelihood Estimation to estimate firms' and countries' preferences.
 
-To solve this problem, \cite{Logan1996} uses the Expectation-Maximization (EM) algorithm.\footnote{The EM algorithm finds the best parameter estimates by iterating between two steps. First, given the current best guess of firms' and countries' preferences, pick values for the unobserved opportunity sets so that we maximize the likelihood. Second, given the current best guess of the unobserved opportunity sets, taken from step 1, pick values for firms' and countries' preferences so that we maximize the likelihood. By iterating between these two steps, the algorithm constantly searches for parameters values that maximize the likelihood.} However, an important downside of the EM algorithm is its lack of standard error. Therefore, while the algorithm is capable of producing the best estimate for the parameters of interest, it is difficult to know how good our best guess really is.
+To solve this problem, \cite{Logan1996} uses the Expectation-Maximization (EM) algorithm.\footnote{The EM algorithm finds the best parameter estimates by iterating between two steps. First, given the current best guess of firms' and countries' preferences, pick values for the unobserved opportunity sets so that we maximize the likelihood. Second, given the current best guess of the unobserved opportunity sets, taken from step 1, pick values for firms' and countries' preferences so that we maximize the likelihood. By iterating between these two steps, the algorithm constantly searches for parameters values that push the likelihood higher.} However, an important downside of the EM algorithm is its lack of a standard error. Therefore, while the algorithm is capable of producing the best estimate for the parameters of interest, it is difficult to know how good our best guess really is.
 
-To overcome this difficulty, I use the Metropolis-Hastings algorithm, a MCMC approach that can approximate the posterior distribution of the opportunity sets, firms' and countries' preferences.
+To overcome this difficulty, I use the Metropolis-Hastings algorithm, a MCMC approach that can approximate the posterior distribution of the opportunity sets, firms', and countries' preferences.
 
-For example, we want to sample from the posterior distribution of the opportunity sets, $p(O|\text{data})$, which can take any complicated form. Suppose we already had a working collection of values $\{O^{1}, \dots, O^{(s)}\}$. To add new values to this collection, we would propose a new value $O^*$, then decide whether to keep it with the probability $\frac{p(O^*|\text{data})}{p(O|\text{data})}$. The intuition is that if $\frac{p(O^*|\text{data})}{p(O|\text{data})}$ is large, then $O^*$ is very likely compared to $O$ given $p(O|\text{data})$. Thus, we should keep $O^*$ and add it to the collection. In other words, we decide to keep newly proposed values of $O$ at a rate proportional to how often they should appear according to $p(O|\text{data})$. Repeating this step many times, at the end we will have a collection of $O$ values that approximates $p(O|\text{data})$ as desired.
+To illustrate the Metropolis-Hastings algorithm, consider our need to sample from the posterior distribution of the opportunity sets, $p(O|\text{data})$, which can take any complicated form. Suppose we already had a working collection of values $\{O^{(1)}, \dots, O^{(s)}\}$. To add new values to this collection, we would propose a new value $O^*$, then decide whether to keep it with the probability $\frac{p(O^*|\text{data})}{p(O|\text{data})}$. The intuition is that if $\frac{p(O^*|\text{data})}{p(O|\text{data})}$ is large, then $O^*$ is very likely compared to $O$ given $p(O|\text{data})$. Thus, we should keep $O^*$ and add it to the collection. In other words, we decide to keep newly proposed values of $O$ at a rate proportional to how often they should appear according to $p(O|\text{data})$. Repeating this step many times, at the end we will have a collection of $O$ values that approximates $p(O|\text{data})$ as desired.
 
-\Cref{appendix:MH_ratio} describes the details of our model estimation and derives the Metropolis-Hastings acceptance ratio. I use flat priors so that our results are driven entirely by the data. In deriving the joint distribution of the data and parameters, including the opportunity sets, the firms' and countries' preferences, there are two important ideas. First, the opportunity sets are determined solely by countries' preferences, not firms'. Second, given the opportunity sets, the final matches are determined solely by firms' preferences, not countries'. Thus, the joint distribution of data and parameters factors out nicely as follows:
+\Cref{appendix:MH_ratio} describes the details of our model estimation and derives the Metropolis-Hastings acceptance ratio. I use flat priors so that the results are driven entirely by the data. In deriving the joint distribution of the data and parameters, there are two important ideas. First, the opportunity sets are determined solely by countries' preferences, not firms'. Second, given the opportunity sets, the final matches are determined solely by firms' preferences, not countries'. Thus, the joint distribution of data and parameters factorizes nicely as follows:
 
 \[
 p(A_i, O_i, \alpha, \bm{\beta}) = p(A_i|O_i, \alpha) p(O_i | \bm{\beta})
 \]
 
-where $A_i$ denotes the country that firm $i$ accepts to invest in, i.e. the observed match data.
+where our observed match data is $A_i$, which denotes the country that firm $i$ accepts to invest in.
