@@ -5,6 +5,7 @@
 \usepackage{amsmath}               % great math stuff
 \usepackage{amsfonts}              % for blackboard bold, etc
 \usepackage{amsthm}                % better theorem environments
+\usepackage{bm}					   % bm for bold math
 
 \usepackage{enumitem} % for [noitemsep]
 \usepackage{rotating} % for sideway table
@@ -28,16 +29,34 @@
 \usepackage{natbib}
 \bibpunct{(}{)}{;}{a}{}{,} % no comma between author and year
 
-\title{Two sided matching}
+\title{Two-Sided Matching Model of FDI Investment Location: Estimating Both Firms' and Countries' Preferences\thanks{The Metropolis-Hastings approach in this paper draws heavily upon conversations with Professor Michael Newton. I also thank Professor Michael Ward for introducing the two-sided matching model, and Professor Andrew Delios for sharing the Japanese FDI data.}}
+
 \author{Anh Le}
 
 
 \begin{document}
 \maketitle
 
-\section{Results}
+\begin{abstract}
+In this paper, I address three long-standing issues in the literature on the political determinants of Foreign Direct Investment (FDI). First, the majority of works use FDI stock and flow as the outcome of interest even though these aggregate statistics are poor measures of multinational corporations' (MNCs) activities. Second, while recent scholarship starts theorizing about countries' demand for FDI, there has not been a satisfactory way to measure countries' preferences. Third, even though policy makers pay much attention to the quality of FDI, the academic literature has mainly focused with its quantity. I propose a new empirical approach---the two-sided matching model---that addresses these three concerns. The model derives its functional form explicitly from actors' utility functions, then uses firm-level data to estimate both firms' and countries' preferences in a matching process. Applying the two-sided model on a dataset of Japanese foreign affiliates, I find that MNCs do not prefer democracies, contradicting the prevailing theory. On the side of countries' preferences, I find tentative evidence that a government's long time horizon increases its preference for high-tech FDI.
+\end{abstract}
 
-Host GDP is negative, host GDP per capita is positive, host democracy is positive, agree with \citep{Eicher2012}
+\input{introduction}
+
+\input{method_advantage}
+
+\input{MH_twosided_logit}
+
+\input{application}
+
+\input{result}
+
+\input{conclusion}
+
+\newpage
+\appendix
+\input{appendix_MH_ratio}
+\input{appendix_summary}
 
 \clearpage
 \bibliographystyle{chicago}

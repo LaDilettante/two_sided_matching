@@ -1,0 +1,46 @@
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}  % set the margins to 1in on all sides
+\usepackage{graphicx}              % to include figures
+\usepackage{amsmath}               % great math stuff
+\usepackage{amsfonts}              % for blackboard bold, etc
+\usepackage{amsthm}                % better theorem environments
+\usepackage{bm} % \bm for bold math
+
+\usepackage{enumitem}
+\usepackage{rotating} % for sideway table
+\usepackage{caption} % for newline in caption
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+\usepackage{cleveref}
+
+\usepackage{array,tabularx}
+  
+\usepackage{float}
+\restylefloat{table}
+
+% bibliography
+\usepackage{natbib}
+\bibpunct{(}{)}{;}{a}{}{,} % no comma between author and year
+
+\title{Metropolis-Hasting for two-sided logit}
+\author{Anh Le}
+
+
+\begin{document}
+\maketitle
+
+\input{MH_twosided_logit}
+
+\clearpage
+\bibliographystyle{chicago}
+\bibliography{library}
+
+
+\end{document}

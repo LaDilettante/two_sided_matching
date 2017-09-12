@@ -1,0 +1,18 @@
+\section{Notation}
+
+Characteristics (observed data):
+\begin{itemize}[noitemsep]
+\item $\underset{(njobs \times nw)}{W}$ is a matrix of job characteristics, whose $j$th row $\underset{(nw \times 1)}{W_j}$ is job $j$'s characteristics
+\item $\underset{(nworkers \times nx)}{X}$ is a matrix of worker characteristics, whose $i$th row $\underset{(nx \times 1)}{X_i}$ is the characteristics of worker $i$
+\end{itemize}
+
+Preferences (parameters to be estimated):
+\begin{itemize}[noitemsep]
+\item $\underset{(nw \times 1)}{\alpha}$: a vector of workers' preference for jobs' characteristics
+\item $\underset{(nx \times njobs)}{\bm\beta}$: a matrix of employers' preference for workers' characteristics. Each employer has his own set of preference. $\bm\beta_j$--- $\bm\beta$'s $j$th column---is the preference of employer $j$.
+\end{itemize}
+
+Matching structure:
+\begin{itemize}
+\item Worker $i$'s opportunity set is $O_i$, which includes unemployment and other jobs that are offered to worker $i$.
+\end{itemize}
