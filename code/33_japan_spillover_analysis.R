@@ -52,8 +52,8 @@ names(xx) <- c("one", "ltemp_div10", "luscpltl_div10", "intensity_avg")
 mcmc <- list(   nskip=100,    # block size for each saved state
                 nsave=50000,    # number of saved states
                 npar=2,      # skips between parameter updates
-                eps1=0.08,    # scale of alpha update
-                eps2=0.004  )  #  scale of beta update; reduction of sd
+                eps1=0.5,    # scale of alpha update
+                eps2=0.01  )  #  scale of beta update; reduction of sd
 
 # Initialize key objects and common calculations across cycles
 
